@@ -1,0 +1,20 @@
+# Godot generated files
+.godot/
+/android/
+
+# .NET build output and local IDE settings
+**/bin/
+**/obj/
+.vs/
+.idea/
+.vscode/
+*.user
+*.suo
+
+# Local Codex configuration and documentation
+/.codex/
+
+# Local export credentials
+export_credentials.cfg
+
+/.temp/

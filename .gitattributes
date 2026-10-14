@@ -1,0 +1,5 @@
+# Normalize EOL for all files that Git considers text files.
+* text=auto eol=lf
+
+# Preserve upstream formatting in the vendored editor plugin.
+addons/godot_ai_mcp/** -whitespace

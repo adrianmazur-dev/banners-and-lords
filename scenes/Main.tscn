@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://dphvep6dewk5k"]
+
+[ext_resource type="Script" path="res://src/Godot/Bootstrap/GameBootstrap.cs" id="1_bootstrap"]
+
+[node name="Main" type="Node" unique_id=1028870432]
+script = ExtResource("1_bootstrap")
