@@ -9,12 +9,13 @@ public sealed class CampaignSession : ICampaignSession
     private const double TickTolerance = 1e-9;
 
     private readonly CampaignClock _clock = new();
+    private readonly ICampaignTickSystem[] _systems;
     private readonly double _secondsPerTick;
     private double _pendingTicks;
     private bool _isPaused;
     private CampaignSpeed _speed = CampaignSpeed.Normal;
 
-    public CampaignSession(double secondsPerTick = 1.0)
+    public CampaignSession(double secondsPerTick = 1.0, IEnumerable<ICampaignTickSystem>? systems = null)
     {
         if (!double.IsFinite(secondsPerTick) || secondsPerTick <= 0)
         {
@@ -22,10 +23,13 @@ public sealed class CampaignSession : ICampaignSession
         }
 
         _secondsPerTick = secondsPerTick;
+        _systems = systems?.ToArray() ?? [];
     }
 
     public CampaignStatus Status => new(
         _clock.Tick, _clock.Day, _clock.Hour, _clock.Minute, _isPaused, _speed);
+
+    public double TickProgress => Math.Clamp(_pendingTicks, 0, 1);
 
     public void Advance(double elapsedRealSeconds)
     {
@@ -49,6 +53,10 @@ public sealed class CampaignSession : ICampaignSession
         for (var count = 0; count < MaxTicksPerAdvance && _pendingTicks + TickTolerance >= 1; count++)
         {
             _clock.AdvanceTick();
+            foreach (var system in _systems)
+            {
+                system.AdvanceTick(_clock.Tick, CampaignClock.MinutesPerTick);
+            }
             // Absorb floating-point error at tick boundaries, including common frame intervals.
             _pendingTicks = Math.Max(0, _pendingTicks - 1);
         }

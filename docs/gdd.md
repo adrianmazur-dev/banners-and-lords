@@ -12,7 +12,7 @@ Explore and take opportunities → earn resources and recruit soldiers → fight
 
 ## Core Mechanics
 
-- **Campaign:** real-time travel with active pause; resource sites, caravans, patrols, bandits, and rival lords share the map.
+- **Campaign:** continuous world-map travel with active pause; resource sites, caravans, patrols, bandits, and rival lords share the map. Roads, terrain, and crossings should make route choice meaningful; hexes belong to tactical battles.
 - **Combat:** turn-based hex battles with terrain, action points, fatigue, armor, and permanent losses. Experienced soldiers are valuable and replaceable only at a cost.
 - **Expansion:** settle undeveloped land or conquer existing holdings. Independent settlement requires substantial resources and preparation; land ownership is a progression milestone.
 - **Economy:** villages produce resources and recruits; castles depend on deliveries and provide defense and elite training; cities process goods, generate income, and consume food. Supply routes must be protected.

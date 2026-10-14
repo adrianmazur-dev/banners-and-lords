@@ -16,6 +16,8 @@ These rules govern implementation.
 - Simulation owns game state independently of nodes and scenes. Each piece of state has one owner; other modules refer to it by stable identifiers.
 - Godot handles input, presentation, audio, and editor integration. Removing a view or failing an animation must not change simulation results.
 - Advance the campaign through fixed simulation ticks with explicit system ordering. Bound work per frame without dropping pending ticks. Schedule daily economy separately from movement; frame rate must not change the rules.
+- Register tick systems through composition and invoke them once per completed tick in registration order. Expose read-only fractional progress for view interpolation; campaign pause must freeze interpolation too.
+- Store movement in engine-free world coordinates. Validate destinations in simulation; convert pointer coordinates only in Godot. Visual terrain does not implicitly define passability.
 - Keep campaign time, speed, pause, and fractional progress in the session. Pausing must preserve progress and speed without accumulating paused time. Initially, campaign time stops during tactical battles while UI and battle presentation remain active.
 - Change state through validated commands; expose read-only data through queries. Player and AI actions use the same rules. Publish events only after changes are committed.
 - Coordinate operations spanning modules so they either complete together or leave state unchanged. Apply each battle result to the campaign exactly once.

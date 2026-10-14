@@ -5,6 +5,28 @@ namespace BannersAndLords.Simulation.Tests;
 
 public sealed class CampaignSessionTests
 {
+    private sealed class RecordingSystem(string name, List<(string, long, int)> calls) : ICampaignTickSystem
+    {
+        public void AdvanceTick(long tick, int elapsedGameMinutes) => calls.Add((name, tick, elapsedGameMinutes));
+    }
+
+    [Fact]
+    public void SystemsAdvanceOncePerTickInRegistrationOrderAndStayFrozenDuringPause()
+    {
+        var calls = new List<(string, long, int)>();
+        var session = new CampaignSession(systems: [new RecordingSystem("first", calls), new RecordingSystem("second", calls)]);
+        session.Advance(2.5);
+        Assert.Equal([("first", 1L, 10), ("second", 1L, 10), ("first", 2L, 10), ("second", 2L, 10)], calls);
+        session.SetPaused(true);
+        session.Advance(100);
+        Assert.Equal(4, calls.Count);
+        Assert.Equal(0.5, session.TickProgress);
+        session.SetPaused(false);
+        session.Advance(0.5);
+        Assert.Equal(6, calls.Count);
+        Assert.Equal(("second", 3L, 10), calls[^1]);
+    }
+
     [Fact]
     public void StartsAtMidnightOnDayOneAtNormalSpeed()
     {
