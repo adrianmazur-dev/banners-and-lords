@@ -15,16 +15,16 @@ public sealed class CampaignSessionTests
     {
         var calls = new List<(string, long, int)>();
         var session = new CampaignSession(systems: [new RecordingSystem("first", calls), new RecordingSystem("second", calls)]);
-        session.Advance(2.5);
-        Assert.Equal([("first", 1L, 10), ("second", 1L, 10), ("first", 2L, 10), ("second", 2L, 10)], calls);
+        session.Advance(0.25);
+        Assert.Equal([("first", 1L, 1), ("second", 1L, 1), ("first", 2L, 1), ("second", 2L, 1)], calls);
         session.SetPaused(true);
         session.Advance(100);
         Assert.Equal(4, calls.Count);
         Assert.Equal(0.5, session.TickProgress);
         session.SetPaused(false);
-        session.Advance(0.5);
+        session.Advance(0.05);
         Assert.Equal(6, calls.Count);
-        Assert.Equal(("second", 3L, 10), calls[^1]);
+        Assert.Equal(("second", 3L, 1), calls[^1]);
     }
 
     [Fact]
@@ -37,14 +37,14 @@ public sealed class CampaignSessionTests
     public void AdvancesOnlyCompleteTicksAndPreservesFractionalTime()
     {
         var session = new CampaignSession();
-        session.Advance(0.75);
+        session.Advance(0.075);
         Assert.Equal(0, session.Status.Tick);
 
-        session.Advance(1.5);
+        session.Advance(0.15);
         Assert.Equal(2, session.Status.Tick);
-        Assert.Equal(20, session.Status.Minute);
+        Assert.Equal(2, session.Status.Minute);
 
-        session.Advance(0.75);
+        session.Advance(0.075);
         Assert.Equal(3, session.Status.Tick);
     }
 
@@ -56,40 +56,45 @@ public sealed class CampaignSessionTests
     {
         var session = new CampaignSession();
         var batched = new CampaignSession();
-        for (var frame = 0; frame < framesPerSecond * 60; frame++)
+        for (var frame = 0; frame < framesPerSecond * 10; frame++)
         {
             session.Advance(1.0 / framesPerSecond);
         }
 
-        batched.Advance(60);
+        batched.Advance(10);
         Assert.Equal(batched.Status, session.Status);
-        Assert.Equal(60, session.Status.Tick);
+        Assert.Equal(100, session.Status.Tick);
+        Assert.Equal(1, session.Status.Hour);
+        Assert.Equal(40, session.Status.Minute);
     }
 
     [Fact]
     public void RollsOverToTheNextDay()
     {
         var session = new CampaignSession();
-        session.Advance(120);
-        session.Advance(23);
-        Assert.Equal(new CampaignStatus(143, 1, 23, 50, false, CampaignSpeed.Normal), session.Status);
+        for (var second = 0; second < 143; second++)
+        {
+            session.Advance(1);
+        }
+        session.Advance(0.9);
+        Assert.Equal(new CampaignStatus(1439, 1, 23, 59, false, CampaignSpeed.Normal), session.Status);
 
-        session.Advance(1);
-        Assert.Equal(new CampaignStatus(144, 2, 0, 0, false, CampaignSpeed.Normal), session.Status);
+        session.Advance(0.1);
+        Assert.Equal(new CampaignStatus(1440, 2, 0, 0, false, CampaignSpeed.Normal), session.Status);
     }
 
     [Fact]
     public void PausePreservesFractionalTimeWithoutAccumulatingPausedTime()
     {
         var session = new CampaignSession();
-        session.Advance(0.75);
+        session.Advance(0.075);
         session.SetPaused(true);
         var paused = session.Status;
         session.Advance(100);
         Assert.Equal(paused, session.Status);
 
         session.SetPaused(false);
-        session.Advance(0.25);
+        session.Advance(0.025);
         Assert.Equal(1, session.Status.Tick);
     }
 
@@ -99,8 +104,10 @@ public sealed class CampaignSessionTests
         var normal = new CampaignSession();
         var fast = new CampaignSession();
         fast.SetSpeed(CampaignSpeed.Fast);
-        normal.Advance(10);
-        fast.Advance(10);
+        normal.Advance(1);
+        fast.Advance(1);
+        Assert.Equal(10, normal.Status.Minute);
+        Assert.Equal(20, fast.Status.Minute);
         Assert.Equal(normal.Status.Tick * 2, fast.Status.Tick);
     }
 
@@ -117,20 +124,20 @@ public sealed class CampaignSessionTests
 
         session.SetPaused(false);
         session.Advance(1);
-        Assert.Equal(2, session.Status.Tick);
+        Assert.Equal(20, session.Status.Tick);
     }
 
     [Fact]
     public void SpeedChangesPreserveProgressTowardTheNextTick()
     {
         var session = new CampaignSession();
-        session.Advance(0.5);
+        session.Advance(0.05);
         session.SetSpeed(CampaignSpeed.Fast);
-        session.Advance(0.25);
+        session.Advance(0.025);
         Assert.Equal(1, session.Status.Tick);
 
         session.SetSpeed(CampaignSpeed.Normal);
-        session.Advance(1);
+        session.Advance(0.1);
         Assert.Equal(2, session.Status.Tick);
     }
 
@@ -138,12 +145,12 @@ public sealed class CampaignSessionTests
     public void LongFramesKeepBacklogWithoutProcessingUnboundedWork()
     {
         var session = new CampaignSession();
-        session.Advance(300.5);
+        session.Advance(30.05);
         Assert.Equal(CampaignSession.MaxTicksPerAdvance, session.Status.Tick);
         session.Advance(0);
         session.Advance(0);
         Assert.Equal(300, session.Status.Tick);
-        session.Advance(0.5);
+        session.Advance(0.05);
         Assert.Equal(301, session.Status.Tick);
     }
 

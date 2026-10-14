@@ -2,7 +2,7 @@ namespace Game.Simulation.Features.Campaign.Domain;
 
 internal sealed class CampaignClock
 {
-    public const int MinutesPerTick = 10;
+    public const int MinutesPerTick = 1;
     private const int TicksPerDay = 24 * 60 / MinutesPerTick;
 
     public long Tick { get; private set; }

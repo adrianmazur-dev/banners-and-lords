@@ -15,7 +15,7 @@ public sealed class CampaignSession : ICampaignSession
     private bool _isPaused;
     private CampaignSpeed _speed = CampaignSpeed.Normal;
 
-    public CampaignSession(double secondsPerTick = 1.0, IEnumerable<ICampaignTickSystem>? systems = null)
+    public CampaignSession(double secondsPerTick = 0.1, IEnumerable<ICampaignTickSystem>? systems = null)
     {
         if (!double.IsFinite(secondsPerTick) || secondsPerTick <= 0)
         {

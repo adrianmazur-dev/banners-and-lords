@@ -82,18 +82,47 @@ public sealed class PartyTravelTests
         var party = CreateParty();
         var session = new CampaignSession(systems: [party]);
         party.TrySetDestination(new Vector2(900, 100));
-        session.Advance(1.5);
+        session.Advance(0.15);
         session.SetPaused(true);
         var before = party.Status;
-        party.TrySetDestination(new Vector2(130, 500));
+        party.TrySetDestination(new Vector2(103, 500));
         session.Advance(100);
         Assert.Equal(before.Position, party.Status.Position);
         Assert.Equal(before.PreviousPosition, party.Status.PreviousPosition);
-        Assert.Equal(0.5, session.TickProgress);
+        Assert.Equal(0.5, session.TickProgress, 8);
         Assert.True(session.Status.IsPaused);
         session.SetPaused(false);
-        session.Advance(0.5);
-        Assert.Equal(new Vector2(130, 130), party.Status.Position);
+        session.Advance(0.05);
+        Assert.Equal(new Vector2(103, 103), party.Status.Position);
+    }
+
+    [Fact]
+    public void NewOrdersAndRedirectionTakeEffectWithinOneTenthOfASecond()
+    {
+        var party = CreateParty();
+        var session = new CampaignSession(systems: [party]);
+        party.TrySetDestination(new Vector2(900, 100));
+        session.Advance(0.1);
+        Assert.Equal(new Vector2(103, 100), party.Status.Position);
+
+        party.TrySetDestination(new Vector2(103, 500));
+        var before = party.Status;
+        session.Advance(0.099);
+        Assert.Equal(before, party.Status);
+        session.Advance(0.001);
+        Assert.Equal(before.Position, party.Status.PreviousPosition);
+        Assert.Equal(new Vector2(103, 103), party.Status.Position);
+    }
+
+    [Fact]
+    public void DefaultTravelSpeedStillCoversTwentyFourUnitsPerRealSecond()
+    {
+        var party = new PartyTravel(new Vector2(1200, 700), new Vector2(100, 100));
+        var session = new CampaignSession(systems: [party]);
+        party.TrySetDestination(new Vector2(1100, 100));
+        session.Advance(1);
+        Assert.Equal(10, session.Status.Minute);
+        Assert.InRange(party.Status.Position.X, 123.9999f, 124.0001f);
     }
 
     [Theory]
@@ -109,9 +138,10 @@ public sealed class PartyTravelTests
         {
             session.Advance(1.0 / fps);
         }
+        session.Advance(0.05);
 
-        Assert.Equal(new Vector2(400, 100), party.Status.Position);
-        Assert.Equal(new Vector2(370, 100), party.Status.PreviousPosition);
+        Assert.Equal(new Vector2(415, 100), party.Status.Position);
+        Assert.Equal(new Vector2(412, 100), party.Status.PreviousPosition);
         Assert.InRange(session.TickProgress, 0.499999, 0.500001);
     }
 
@@ -125,9 +155,9 @@ public sealed class PartyTravelTests
         normal.TrySetDestination(new Vector2(1100, 100));
         fast.TrySetDestination(new Vector2(1100, 100));
         fastSession.SetSpeed(CampaignSpeed.Fast);
-        normalSession.Advance(10);
-        fastSession.Advance(10);
-        Assert.Equal(300, normal.Status.Position.X - 100);
-        Assert.Equal(600, fast.Status.Position.X - 100);
+        normalSession.Advance(1);
+        fastSession.Advance(1);
+        Assert.Equal(30, normal.Status.Position.X - 100);
+        Assert.Equal(60, fast.Status.Position.X - 100);
     }
 }
