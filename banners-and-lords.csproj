@@ -6,4 +6,8 @@
     <RootNamespace>Game</RootNamespace>
     <Nullable>enable</Nullable>
   </PropertyGroup>
+  <ItemGroup>
+    <Compile Remove="src/Simulation/**/*.cs;tests/**/*.cs" />
+    <ProjectReference Include="src/Simulation/BannersAndLords.Simulation.csproj" />
+  </ItemGroup>
 </Project>

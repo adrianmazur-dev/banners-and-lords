@@ -1,12 +1,16 @@
-﻿Microsoft Visual Studio Solution File, Format Version 12.00
+Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "banners-and-lords", "banners-and-lords.csproj", "{B7DD085E-3448-498E-B984-E11A9395F44A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BannersAndLords.Simulation", "src\Simulation\BannersAndLords.Simulation.csproj", "{0C7F16BC-059A-477F-8C1A-26B372774585}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BannersAndLords.Simulation.Tests", "tests\BannersAndLords.Simulation.Tests\BannersAndLords.Simulation.Tests.csproj", "{7F8DE295-98BA-46DE-B0F1-0672D9B159FD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
-	Debug|Any CPU = Debug|Any CPU
-	ExportDebug|Any CPU = ExportDebug|Any CPU
-	ExportRelease|Any CPU = ExportRelease|Any CPU
+		Debug|Any CPU = Debug|Any CPU
+		ExportDebug|Any CPU = ExportDebug|Any CPU
+		ExportRelease|Any CPU = ExportRelease|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{B7DD085E-3448-498E-B984-E11A9395F44A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -15,5 +19,15 @@ Global
 		{B7DD085E-3448-498E-B984-E11A9395F44A}.ExportDebug|Any CPU.Build.0 = ExportDebug|Any CPU
 		{B7DD085E-3448-498E-B984-E11A9395F44A}.ExportRelease|Any CPU.ActiveCfg = ExportRelease|Any CPU
 		{B7DD085E-3448-498E-B984-E11A9395F44A}.ExportRelease|Any CPU.Build.0 = ExportRelease|Any CPU
+		{0C7F16BC-059A-477F-8C1A-26B372774585}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0C7F16BC-059A-477F-8C1A-26B372774585}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0C7F16BC-059A-477F-8C1A-26B372774585}.ExportDebug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0C7F16BC-059A-477F-8C1A-26B372774585}.ExportDebug|Any CPU.Build.0 = Debug|Any CPU
+		{0C7F16BC-059A-477F-8C1A-26B372774585}.ExportRelease|Any CPU.ActiveCfg = Release|Any CPU
+		{0C7F16BC-059A-477F-8C1A-26B372774585}.ExportRelease|Any CPU.Build.0 = Release|Any CPU
+		{7F8DE295-98BA-46DE-B0F1-0672D9B159FD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7F8DE295-98BA-46DE-B0F1-0672D9B159FD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7F8DE295-98BA-46DE-B0F1-0672D9B159FD}.ExportDebug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7F8DE295-98BA-46DE-B0F1-0672D9B159FD}.ExportRelease|Any CPU.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 EndGlobal

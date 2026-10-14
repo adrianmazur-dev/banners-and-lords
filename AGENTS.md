@@ -3,7 +3,7 @@
 ## Working Rules
 
 - Use English for code, documentation and game text.
-- Use docs/gdd.md for gameplay decisions and docs/architecture.md for technical decisions.
+- Use docs/brief.md for implemented systems, docs/gdd.md for game design, and docs/architecture.md for technical rules.
 - Deliver small, complete increments. Preserve existing user changes and keep unrelated work out of scope.
 - Use Godot MCP for editor inspection and scene operations; verify the active project and scene before editing. Preserve unsaved user work.
 - After C# changes, run `dotnet build banners-and-lords.sln`. Check scene and gameplay changes in Godot; add meaningful tests for important rules and edge cases.
@@ -13,6 +13,6 @@
 
 - Remove temporary files, obsolete code, unused assets, and debugging scaffolding introduced by the task. Preserve user-owned files and archives.
 - Review the complete change for correctness, scope, architectural consistency, and unnecessary complexity. Resolve findings before reporting completion.
-- Update docs/gdd.md when gameplay decisions change and docs/architecture.md when technical rules or architecture change. Keep intended design distinct from implemented behavior.
-- Update AGENTS.md when the user establishes or changes a lasting working rule. Replace outdated instructions; keep all three documents concise and free of task history.
+- Update docs/brief.md when implemented systems change, docs/gdd.md when design decisions change, and docs/architecture.md when technical rules change. Keep brief.md a current snapshot, not a changelog.
+- Update AGENTS.md when the user establishes or changes a lasting working rule. Replace outdated instructions; keep instructions and project documents concise and free of task history.
 - Report the outcome, verification performed, and any remaining limitations.
