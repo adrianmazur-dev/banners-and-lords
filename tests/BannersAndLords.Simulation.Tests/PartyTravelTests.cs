@@ -1,13 +1,22 @@
 using System.Numerics;
 using Game.Simulation.Features.Campaign.Application;
 using Game.Simulation.Features.Campaign.Contracts;
+using Game.Simulation.Features.Dynasties.Application;
+using Game.Simulation.Features.Dynasties.Contracts;
 using Game.Simulation.Features.Parties.Application;
+using Game.Simulation.Features.Parties.Contracts;
 
 namespace BannersAndLords.Simulation.Tests;
 
 public sealed class PartyTravelTests
 {
-    private static PartyTravel CreateParty() => new(new Vector2(1200, 700), new Vector2(100, 100), 3);
+    private static readonly IDynastyQuery Dynasties = new DynastyRoster(
+        [new DynastyInfo("test-house", "Test House", "test-commander")],
+        [new CharacterInfo("test-commander", "Test Commander", "test-house")]);
+
+    private static PartyTravel CreateParty(float unitsPerGameMinute = 3) => new(
+        new PartyIdentity("test-company", "test-commander"), Dynasties,
+        new Vector2(1200, 700), new Vector2(100, 100), unitsPerGameMinute);
 
     [Fact]
     public void OrderingTheCurrentPositionCancelsTravelWithoutChangingTheRenderedSegment()
@@ -117,7 +126,8 @@ public sealed class PartyTravelTests
     [Fact]
     public void DefaultTravelSpeedStillCoversTwentyFourUnitsPerRealSecond()
     {
-        var party = new PartyTravel(new Vector2(1200, 700), new Vector2(100, 100));
+        var party = new PartyTravel(new PartyIdentity("default-company", "test-commander"), Dynasties,
+            new Vector2(1200, 700), new Vector2(100, 100));
         var session = new CampaignSession(systems: [party]);
         party.TrySetDestination(new Vector2(1100, 100));
         session.Advance(1);

@@ -18,6 +18,15 @@ Explore and take opportunities → earn resources and recruit soldiers → fight
 - **Economy:** villages produce resources and recruits; castles depend on deliveries and provide defense and elite training; cities process goods, generate income, and consume food. Supply routes must be protected.
 - **Politics:** lords have distinct traits and remember favors and betrayals. Resource shortages, borders, and relative strength influence trade, alliances, passage rights, and war.
 
+## Dynasties and Characters
+
+- Each significant noble character belongs to a dynasty: a family with a name, coat of arms, and head. One dynasty can include multiple lords, knights, ladies, and descendants; commoners do not require dynasty membership.
+- Characters have individual traits, relationships, and roles. Multiple members of one dynasty can lead separate parties; a world-map party represents a group under a character's command.
+- Family membership and political allegiance are separate. A character may serve another house while retaining their own dynasty; a kingdom can unite several dynasties.
+- The player controls a character within a dynasty. Dynastic continuity connects land, family relationships, and succession across generations.
+- Party and Dynasty have separate panels: Party covers the commanded group and its orders; Dynasty covers the family, its head, and members. The commander's entry links to their dynasty.
+- Marriage, descendants, and inheritance should eventually allow an eligible successor to continue the campaign after the player's character dies. Detailed succession rules remain open.
+
 ## Initial Focus
 
 Prove one small campaign region with production, a delivery route, a tactical encounter, and consequences carried back into the campaign.

@@ -14,6 +14,7 @@ These rules govern implementation.
 ## State and Execution
 
 - Simulation owns game state independently of nodes and scenes. Each piece of state has one owner; other modules refer to it by stable identifiers.
+- Dynasties owns noble characters, family membership, and dynasty heads. Parties references commanders by character ID and validates them through Dynasties Contracts; derive the commander's dynasty from the roster instead of duplicating it on the party.
 - Godot handles input, presentation, audio, and editor integration. Removing a view or failing an animation must not change simulation results.
 - Advance the campaign through fixed simulation ticks with explicit system ordering. Bound work per frame without dropping pending ticks. Schedule daily economy separately from movement; frame rate must not change the rules.
 - Register tick systems through composition and invoke them once per completed tick in registration order. Expose read-only fractional progress for view interpolation; campaign pause must freeze interpolation too.

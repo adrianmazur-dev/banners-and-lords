@@ -5,6 +5,7 @@
 - Use English for code, documentation and game text.
 - Use docs/brief.md for implemented systems, docs/gdd.md for game design, and docs/architecture.md for technical rules.
 - Deliver small, complete increments. Preserve existing user changes and keep unrelated work out of scope.
+- Critically assess plans and instructions. Explain concrete flaws, tradeoffs, or unnecessary complexity and recommend better alternatives when warranted; avoid automatic agreement and respect the user's informed decisions.
 - Use Godot MCP for editor inspection and scene operations; verify the active project and scene before editing. Preserve unsaved user work.
 - After C# changes, run `dotnet build banners-and-lords.sln`. Check scene and gameplay changes in Godot; add meaningful tests for important rules and edge cases.
 - Use focused Conventional Commits when committing. Keep .temp/ and generated files out of Git; retain source assets, licenses, and Godot .uid files.

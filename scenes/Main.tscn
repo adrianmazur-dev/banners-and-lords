@@ -6,6 +6,9 @@
 [ext_resource type="Script" uid="uid://lmf5p0qwv6y" path="res://src/Godot/Features/WorldMap/ValleyMapController.cs" id="4_map"]
 [ext_resource type="Script" uid="uid://c7ilp4krk28o" path="res://src/Godot/Features/WorldMap/ValleyTerrain.cs" id="5_terrain"]
 [ext_resource type="Script" uid="uid://bxrqua5rmew7h" path="res://src/Godot/Features/WorldMap/PartyMapView.cs" id="6_party"]
+[ext_resource type="Script" uid="uid://bc0egr6wvghy6" path="res://src/Godot/Features/Campaign/CampaignPanelsController.cs" id="7_q8u5g"]
+[ext_resource type="Script" uid="uid://hm0xa506ahm3" path="res://src/Godot/Features/Parties/PartyPanelController.cs" id="8_lhr70"]
+[ext_resource type="Script" uid="uid://dttu604d85q17" path="res://src/Godot/Features/Dynasties/DynastyPanelController.cs" id="9_wp0k4"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBox_panel"]
 bg_color = Color(0.11, 0.14, 0.12, 1)
@@ -21,11 +24,13 @@ corner_radius_bottom_left = 4
 
 [sub_resource type="ButtonGroup" id="ButtonGroup_speed"]
 
-[node name="Main" type="Node" unique_id=1028870432 node_paths=PackedStringArray("Runner", "Campaign", "Map")]
+[node name="Main" type="Node" unique_id=1028870432 node_paths=PackedStringArray("Runner", "Campaign", "Map", "Party", "Dynasty")]
 script = ExtResource("1_bootstrap")
 Runner = NodePath("CampaignRunner")
 Campaign = NodePath("Campaign")
 Map = NodePath("WorldMap")
+Party = NodePath("CampaignPanels/Party")
+Dynasty = NodePath("CampaignPanels/Dynasty")
 
 [node name="CampaignRunner" type="Node" parent="." unique_id=334721044]
 script = ExtResource("3_runner")
@@ -186,23 +191,212 @@ theme_override_constants/margin_bottom = 10
 layout_mode = 2
 theme_override_constants/separation = 24
 
-[node name="Company" type="VBoxContainer" parent="Campaign/BottomBar/Margin/Row" unique_id=287480986]
+[node name="PartySummary" type="VBoxContainer" parent="Campaign/BottomBar/Margin/Row" unique_id=287480986]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Name" type="Label" parent="Campaign/BottomBar/Margin/Row/Company" unique_id=1545333660]
+[node name="Name" type="Label" parent="Campaign/BottomBar/Margin/Row/PartySummary" unique_id=1545333660]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.87, 0.8, 0.6, 1)
 theme_override_font_sizes/font_size = 16
-text = "YOUR COMPANY"
+text = "YOUR PARTY"
 
-[node name="Hint" type="Label" parent="Campaign/BottomBar/Margin/Row/Company" unique_id=1860938131]
+[node name="Hint" type="Label" parent="Campaign/BottomBar/Margin/Row/PartySummary" unique_id=1860938131]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.65, 0.7, 0.61, 1)
 theme_override_font_sizes/font_size = 14
 text = "Right-click to travel  ·  Space: pause  ·  1 / 2: speed"
 
+[node name="PartyButton" type="Button" parent="Campaign/BottomBar/Margin/Row" unique_id=1702151216]
+custom_minimum_size = Vector2(92, 38)
+layout_mode = 2
+size_flags_vertical = 4
+toggle_mode = true
+text = "Party"
+
+[node name="DynastyButton" type="Button" parent="Campaign/BottomBar/Margin/Row" unique_id=766396123]
+custom_minimum_size = Vector2(108, 38)
+layout_mode = 2
+size_flags_vertical = 4
+toggle_mode = true
+text = "Dynasty"
+
 [node name="Orders" type="Label" parent="Campaign/BottomBar/Margin/Row" unique_id=1578603645]
 layout_mode = 2
 theme_override_font_sizes/font_size = 16
 text = "Holding position"
+
+[node name="CampaignPanels" type="Control" parent="." unique_id=845789076 node_paths=PackedStringArray("PartyPanel", "DynastyPanel", "PartyButton", "DynastyButton", "PartyCloseButton", "DynastyCloseButton", "CommanderButton")]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+script = ExtResource("7_q8u5g")
+PartyPanel = NodePath("Party")
+DynastyPanel = NodePath("Dynasty")
+PartyButton = NodePath("../Campaign/BottomBar/Margin/Row/PartyButton")
+DynastyButton = NodePath("../Campaign/BottomBar/Margin/Row/DynastyButton")
+PartyCloseButton = NodePath("Party/Margin/Body/Header/Close")
+DynastyCloseButton = NodePath("Dynasty/Margin/Body/Header/Close")
+CommanderButton = NodePath("Party/Margin/Body/Commander")
+
+[node name="Party" type="PanelContainer" parent="CampaignPanels" unique_id=2058766386 node_paths=PackedStringArray("CommanderButton", "PartyLabel", "StateLabel", "OrderLabel")]
+visible = false
+layout_mode = 0
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -364.0
+offset_top = 102.0
+offset_right = -24.0
+offset_bottom = 422.0
+theme_override_styles/panel = SubResource("StyleBox_panel")
+script = ExtResource("8_lhr70")
+CommanderButton = NodePath("Margin/Body/Commander")
+PartyLabel = NodePath("../../Campaign/BottomBar/Margin/Row/PartySummary/Name")
+StateLabel = NodePath("Margin/Body/TravelState")
+OrderLabel = NodePath("Margin/Body/Order")
+
+[node name="Margin" type="MarginContainer" parent="CampaignPanels/Party" unique_id=998027391]
+layout_mode = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
+
+[node name="Body" type="VBoxContainer" parent="CampaignPanels/Party/Margin" unique_id=1252826939]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="Header" type="HBoxContainer" parent="CampaignPanels/Party/Margin/Body" unique_id=460302322]
+layout_mode = 2
+
+[node name="Title" type="Label" parent="CampaignPanels/Party/Margin/Body/Header" unique_id=327030241]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.87058824, 0.8, 0.6, 1)
+theme_override_font_sizes/font_size = 21
+text = "Party"
+
+[node name="Close" type="Button" parent="CampaignPanels/Party/Margin/Body/Header" unique_id=934696190]
+custom_minimum_size = Vector2(64, 32)
+layout_mode = 2
+text = "Close"
+
+[node name="Divider" type="HSeparator" parent="CampaignPanels/Party/Margin/Body" unique_id=631500011]
+layout_mode = 2
+
+[node name="CommanderHeading" type="Label" parent="CampaignPanels/Party/Margin/Body" unique_id=1059175186]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.6509804, 0.69803923, 0.6117647, 1)
+theme_override_font_sizes/font_size = 12
+text = "COMMANDER"
+
+[node name="Commander" type="Button" parent="CampaignPanels/Party/Margin/Body" unique_id=182624537]
+custom_minimum_size = Vector2(0, 36)
+layout_mode = 2
+tooltip_text = "View commander's dynasty"
+theme_override_colors/font_color = Color(0.8901961, 0.7607843, 0.46666667, 1)
+theme_override_font_sizes/font_size = 21
+text = "Commander"
+flat = true
+alignment = 0
+
+[node name="TravelHeading" type="Label" parent="CampaignPanels/Party/Margin/Body" unique_id=1850361662]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.6509804, 0.69803923, 0.6117647, 1)
+theme_override_font_sizes/font_size = 12
+text = "TRAVEL"
+
+[node name="TravelState" type="Label" parent="CampaignPanels/Party/Margin/Body" unique_id=981381344]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.87058824, 0.827451, 0.6901961, 1)
+theme_override_font_sizes/font_size = 18
+text = "Holding position"
+
+[node name="OrderHeading" type="Label" parent="CampaignPanels/Party/Margin/Body" unique_id=2127554785]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.6509804, 0.69803923, 0.6117647, 1)
+theme_override_font_sizes/font_size = 12
+text = "CURRENT ORDER"
+
+[node name="Order" type="Label" parent="CampaignPanels/Party/Margin/Body" unique_id=116417372]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.87058824, 0.827451, 0.6901961, 1)
+theme_override_font_sizes/font_size = 16
+text = "No movement order"
+
+[node name="Dynasty" type="PanelContainer" parent="CampaignPanels" unique_id=567160983 node_paths=PackedStringArray("DynastyLabel", "HeadLabel", "MembersHeading", "MembersLabel")]
+visible = false
+layout_mode = 0
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -364.0
+offset_top = 102.0
+offset_right = -24.0
+offset_bottom = 442.0
+theme_override_styles/panel = SubResource("StyleBox_panel")
+script = ExtResource("9_wp0k4")
+DynastyLabel = NodePath("Margin/Body/Dynasty")
+HeadLabel = NodePath("Margin/Body/Head")
+MembersHeading = NodePath("Margin/Body/MembersHeading")
+MembersLabel = NodePath("Margin/Body/Members")
+
+[node name="Margin" type="MarginContainer" parent="CampaignPanels/Dynasty" unique_id=1121556133]
+layout_mode = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
+
+[node name="Body" type="VBoxContainer" parent="CampaignPanels/Dynasty/Margin" unique_id=877115911]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="Header" type="HBoxContainer" parent="CampaignPanels/Dynasty/Margin/Body" unique_id=1745343389]
+layout_mode = 2
+
+[node name="Title" type="Label" parent="CampaignPanels/Dynasty/Margin/Body/Header" unique_id=2143817931]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.87058824, 0.8, 0.6, 1)
+theme_override_font_sizes/font_size = 21
+text = "Dynasty"
+
+[node name="Close" type="Button" parent="CampaignPanels/Dynasty/Margin/Body/Header" unique_id=40658688]
+custom_minimum_size = Vector2(64, 32)
+layout_mode = 2
+text = "Close"
+
+[node name="Divider" type="HSeparator" parent="CampaignPanels/Dynasty/Margin/Body" unique_id=832589491]
+layout_mode = 2
+
+[node name="Dynasty" type="Label" parent="CampaignPanels/Dynasty/Margin/Body" unique_id=204779830]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.8901961, 0.7607843, 0.46666667, 1)
+theme_override_font_sizes/font_size = 22
+text = "House"
+
+[node name="HeadHeading" type="Label" parent="CampaignPanels/Dynasty/Margin/Body" unique_id=1772620277]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.6509804, 0.69803923, 0.6117647, 1)
+theme_override_font_sizes/font_size = 12
+text = "HEAD OF DYNASTY"
+
+[node name="Head" type="Label" parent="CampaignPanels/Dynasty/Margin/Body" unique_id=1968698598]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.87058824, 0.827451, 0.6901961, 1)
+theme_override_font_sizes/font_size = 18
+text = "Head"
+
+[node name="MembersHeading" type="Label" parent="CampaignPanels/Dynasty/Margin/Body" unique_id=864809987]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.6509804, 0.69803923, 0.6117647, 1)
+theme_override_font_sizes/font_size = 12
+text = "MEMBERS"
+
+[node name="Members" type="Label" parent="CampaignPanels/Dynasty/Margin/Body" unique_id=645284472]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.87058824, 0.827451, 0.6901961, 1)
+theme_override_constants/line_spacing = 8
+theme_override_font_sizes/font_size = 16
