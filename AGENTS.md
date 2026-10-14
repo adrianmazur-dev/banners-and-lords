@@ -2,7 +2,7 @@
 
 ## Working Rules
 
-- Use English for code, documentation, game text, and project communication.
+- Use English for code, documentation and game text.
 - Use docs/gdd.md for gameplay decisions and docs/architecture.md for technical decisions.
 - Deliver small, complete increments. Preserve existing user changes and keep unrelated work out of scope.
 - Use Godot MCP for editor inspection and scene operations; verify the active project and scene before editing. Preserve unsaved user work.
