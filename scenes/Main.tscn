@@ -9,6 +9,7 @@
 [ext_resource type="Script" uid="uid://bc0egr6wvghy6" path="res://src/Godot/Features/Campaign/CampaignPanelsController.cs" id="7_q8u5g"]
 [ext_resource type="Script" uid="uid://hm0xa506ahm3" path="res://src/Godot/Features/Parties/PartyPanelController.cs" id="8_lhr70"]
 [ext_resource type="Script" uid="uid://dttu604d85q17" path="res://src/Godot/Features/Dynasties/DynastyPanelController.cs" id="9_wp0k4"]
+[ext_resource type="Script" uid="uid://hqoha5qa6n55" path="res://src/Godot/Features/Settlements/SettlementPanelController.cs" id="10_lhr70"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBox_panel"]
 bg_color = Color(0.11, 0.14, 0.12, 1)
@@ -24,13 +25,23 @@ corner_radius_bottom_left = 4
 
 [sub_resource type="ButtonGroup" id="ButtonGroup_speed"]
 
-[node name="Main" type="Node" unique_id=1028870432 node_paths=PackedStringArray("Runner", "Campaign", "Map", "Party", "Dynasty")]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_lhr70"]
+bg_color = Color(0.08235294, 0.105882354, 0.08627451, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.25882354, 0.2901961, 0.21568628, 1)
+
+[node name="Main" type="Node" unique_id=1028870432 node_paths=PackedStringArray("Runner", "Campaign", "Map", "Party", "Dynasty", "Panels", "Settlement")]
 script = ExtResource("1_bootstrap")
 Runner = NodePath("CampaignRunner")
 Campaign = NodePath("Campaign")
 Map = NodePath("WorldMap")
 Party = NodePath("CampaignPanels/Party")
 Dynasty = NodePath("CampaignPanels/Dynasty")
+Panels = NodePath("CampaignPanels")
+Settlement = NodePath("CampaignPanels/Settlement")
 
 [node name="CampaignRunner" type="Node" parent="." unique_id=334721044]
 script = ExtResource("3_runner")
@@ -56,6 +67,7 @@ offset_right = -24.0
 offset_bottom = -94.0
 grow_horizontal = 2
 grow_vertical = 2
+tooltip_text = "Left-click a village to inspect it. Right-click to give a travel order."
 mouse_default_cursor_shape = 2
 script = ExtResource("4_map")
 WorldCanvas = NodePath("World")
@@ -205,7 +217,7 @@ text = "YOUR PARTY"
 layout_mode = 2
 theme_override_colors/font_color = Color(0.65, 0.7, 0.61, 1)
 theme_override_font_sizes/font_size = 14
-text = "Right-click to travel  ·  Space: pause  ·  1 / 2: speed"
+text = "Click villages · RMB: travel · Space: pause · 1 / 2: speed"
 
 [node name="PartyButton" type="Button" parent="Campaign/BottomBar/Margin/Row" unique_id=1702151216]
 custom_minimum_size = Vector2(92, 38)
@@ -226,7 +238,7 @@ layout_mode = 2
 theme_override_font_sizes/font_size = 16
 text = "Holding position"
 
-[node name="CampaignPanels" type="Control" parent="." unique_id=845789076 node_paths=PackedStringArray("PartyPanel", "DynastyPanel", "PartyButton", "DynastyButton", "PartyCloseButton", "DynastyCloseButton", "CommanderButton")]
+[node name="CampaignPanels" type="Control" parent="." unique_id=845789076 node_paths=PackedStringArray("PartyPanel", "DynastyPanel", "SettlementPanel", "PartyButton", "DynastyButton", "PartyCloseButton", "DynastyCloseButton", "CommanderButton", "SettlementCloseButton")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -235,13 +247,15 @@ mouse_filter = 2
 script = ExtResource("7_q8u5g")
 PartyPanel = NodePath("Party")
 DynastyPanel = NodePath("Dynasty")
+SettlementPanel = NodePath("Settlement")
 PartyButton = NodePath("../Campaign/BottomBar/Margin/Row/PartyButton")
 DynastyButton = NodePath("../Campaign/BottomBar/Margin/Row/DynastyButton")
 PartyCloseButton = NodePath("Party/Margin/Body/Header/Close")
 DynastyCloseButton = NodePath("Dynasty/Margin/Body/Header/Close")
 CommanderButton = NodePath("Party/Margin/Body/Commander")
+SettlementCloseButton = NodePath("Settlement/Margin/Body/Header/Close")
 
-[node name="Party" type="PanelContainer" parent="CampaignPanels" unique_id=2058766386 node_paths=PackedStringArray("CommanderButton", "PartyLabel", "StateLabel", "OrderLabel")]
+[node name="Party" type="PanelContainer" parent="CampaignPanels" unique_id=2058766386 node_paths=PackedStringArray("CommanderButton", "PartyLabel", "StateLabel", "OrderLabel", "CargoList", "EmptyCargoLabel")]
 visible = false
 layout_mode = 0
 anchor_left = 1.0
@@ -249,13 +263,15 @@ anchor_right = 1.0
 offset_left = -364.0
 offset_top = 102.0
 offset_right = -24.0
-offset_bottom = 422.0
+offset_bottom = 632.0
 theme_override_styles/panel = SubResource("StyleBox_panel")
 script = ExtResource("8_lhr70")
 CommanderButton = NodePath("Margin/Body/Commander")
 PartyLabel = NodePath("../../Campaign/BottomBar/Margin/Row/PartySummary/Name")
 StateLabel = NodePath("Margin/Body/TravelState")
 OrderLabel = NodePath("Margin/Body/Order")
+CargoList = NodePath("Margin/Body/Cargo")
+EmptyCargoLabel = NodePath("Margin/Body/EmptyCargo")
 
 [node name="Margin" type="MarginContainer" parent="CampaignPanels/Party" unique_id=998027391]
 layout_mode = 2
@@ -325,6 +341,29 @@ layout_mode = 2
 theme_override_colors/font_color = Color(0.87058824, 0.827451, 0.6901961, 1)
 theme_override_font_sizes/font_size = 16
 text = "No movement order"
+
+[node name="CargoHeading" type="Label" parent="CampaignPanels/Party/Margin/Body" unique_id=1528558298]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.6509804, 0.69803923, 0.6117647, 1)
+theme_override_font_sizes/font_size = 12
+text = "CARGO"
+
+[node name="EmptyCargo" type="Label" parent="CampaignPanels/Party/Margin/Body" unique_id=1535273836]
+visible = false
+layout_mode = 2
+theme_override_colors/font_color = Color(0.6509804, 0.69803923, 0.6117647, 1)
+theme_override_font_sizes/font_size = 16
+text = "No cargo."
+
+[node name="Cargo" type="Tree" parent="CampaignPanels/Party/Margin/Body" unique_id=952362485]
+custom_minimum_size = Vector2(0, 140)
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_colors/font_color = Color(0.87058824, 0.827451, 0.6901961, 1)
+theme_override_styles/panel = SubResource("StyleBoxFlat_lhr70")
+columns = 2
+column_titles_visible = true
+hide_root = true
 
 [node name="Dynasty" type="PanelContainer" parent="CampaignPanels" unique_id=567160983 node_paths=PackedStringArray("DynastyLabel", "HeadLabel", "MembersHeading", "MembersLabel")]
 visible = false
@@ -400,3 +439,169 @@ layout_mode = 2
 theme_override_colors/font_color = Color(0.87058824, 0.827451, 0.6901961, 1)
 theme_override_constants/line_spacing = 8
 theme_override_font_sizes/font_size = 16
+
+[node name="Settlement" type="PanelContainer" parent="CampaignPanels" unique_id=138751971 node_paths=PackedStringArray("NameLabel", "DescriptionLabel", "AccessLabel", "TravelButton", "EnterButton", "VisitView", "VisitNameLabel", "VisitDescriptionLabel", "LeaveButton")]
+visible = false
+layout_mode = 0
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -364.0
+offset_top = 102.0
+offset_right = -24.0
+offset_bottom = 462.0
+theme_override_styles/panel = SubResource("StyleBox_panel")
+script = ExtResource("10_lhr70")
+NameLabel = NodePath("Margin/Body/Name")
+DescriptionLabel = NodePath("Margin/Body/Description")
+AccessLabel = NodePath("Margin/Body/Access")
+TravelButton = NodePath("Margin/Body/Actions/Travel")
+EnterButton = NodePath("Margin/Body/Actions/Enter")
+VisitView = NodePath("../../SettlementVisit")
+VisitNameLabel = NodePath("../../SettlementVisit/Center/Card/Margin/Body/Name")
+VisitDescriptionLabel = NodePath("../../SettlementVisit/Center/Card/Margin/Body/Description")
+LeaveButton = NodePath("../../SettlementVisit/Center/Card/Margin/Body/Leave")
+
+[node name="Margin" type="MarginContainer" parent="CampaignPanels/Settlement" unique_id=1791171638]
+layout_mode = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
+
+[node name="Body" type="VBoxContainer" parent="CampaignPanels/Settlement/Margin" unique_id=489027713]
+layout_mode = 2
+theme_override_constants/separation = 14
+
+[node name="Header" type="HBoxContainer" parent="CampaignPanels/Settlement/Margin/Body" unique_id=303282386]
+layout_mode = 2
+
+[node name="Title" type="Label" parent="CampaignPanels/Settlement/Margin/Body/Header" unique_id=410196664]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.87058824, 0.8, 0.6, 1)
+theme_override_font_sizes/font_size = 21
+text = "Village"
+
+[node name="Close" type="Button" parent="CampaignPanels/Settlement/Margin/Body/Header" unique_id=1270316799]
+custom_minimum_size = Vector2(64, 32)
+layout_mode = 2
+text = "Close"
+
+[node name="Divider" type="HSeparator" parent="CampaignPanels/Settlement/Margin/Body" unique_id=831775456]
+layout_mode = 2
+
+[node name="Name" type="Label" parent="CampaignPanels/Settlement/Margin/Body" unique_id=1638356919]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.8901961, 0.7607843, 0.46666667, 1)
+theme_override_font_sizes/font_size = 22
+text = "Village"
+
+[node name="Description" type="Label" parent="CampaignPanels/Settlement/Margin/Body" unique_id=1193351703]
+custom_minimum_size = Vector2(290, 0)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.87058824, 0.827451, 0.6901961, 1)
+theme_override_font_sizes/font_size = 16
+autowrap_mode = 3
+
+[node name="Access" type="Label" parent="CampaignPanels/Settlement/Margin/Body" unique_id=1699911736]
+custom_minimum_size = Vector2(290, 0)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.6509804, 0.69803923, 0.6117647, 1)
+theme_override_font_sizes/font_size = 14
+text = "Move your party closer to enter."
+autowrap_mode = 3
+
+[node name="Actions" type="HBoxContainer" parent="CampaignPanels/Settlement/Margin/Body" unique_id=443660149]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="Travel" type="Button" parent="CampaignPanels/Settlement/Margin/Body/Actions" unique_id=1235165135]
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Travel here"
+
+[node name="Enter" type="Button" parent="CampaignPanels/Settlement/Margin/Body/Actions" unique_id=1300544225]
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
+size_flags_horizontal = 3
+disabled = true
+text = "Enter"
+
+[node name="SettlementVisit" type="Control" parent="." unique_id=1571406932]
+visible = false
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="Shade" type="ColorRect" parent="SettlementVisit" unique_id=2055444707]
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+color = Color(0.035, 0.05, 0.04, 0.85)
+
+[node name="Center" type="CenterContainer" parent="SettlementVisit" unique_id=940743888]
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+
+[node name="Card" type="PanelContainer" parent="SettlementVisit/Center" unique_id=1242822319]
+custom_minimum_size = Vector2(560, 380)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBox_panel")
+
+[node name="Margin" type="MarginContainer" parent="SettlementVisit/Center/Card" unique_id=1153866951]
+layout_mode = 2
+theme_override_constants/margin_left = 28
+theme_override_constants/margin_top = 28
+theme_override_constants/margin_right = 28
+theme_override_constants/margin_bottom = 28
+
+[node name="Body" type="VBoxContainer" parent="SettlementVisit/Center/Card/Margin" unique_id=2091893143]
+layout_mode = 2
+theme_override_constants/separation = 18
+
+[node name="Type" type="Label" parent="SettlementVisit/Center/Card/Margin/Body" unique_id=2136923016]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.6509804, 0.69803923, 0.6117647, 1)
+theme_override_font_sizes/font_size = 13
+text = "VILLAGE"
+
+[node name="Name" type="Label" parent="SettlementVisit/Center/Card/Margin/Body" unique_id=506890954]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.8901961, 0.7607843, 0.46666667, 1)
+theme_override_font_sizes/font_size = 32
+text = "Village"
+
+[node name="Description" type="Label" parent="SettlementVisit/Center/Card/Margin/Body" unique_id=1393162333]
+custom_minimum_size = Vector2(504, 0)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.87058824, 0.827451, 0.6901961, 1)
+theme_override_font_sizes/font_size = 18
+autowrap_mode = 3
+
+[node name="Status" type="Label" parent="SettlementVisit/Center/Card/Margin/Body" unique_id=1838265776]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.87058824, 0.827451, 0.6901961, 1)
+theme_override_font_sizes/font_size = 16
+text = "Your party is visiting the village."
+
+[node name="Time" type="Label" parent="SettlementVisit/Center/Card/Margin/Body" unique_id=1016453467]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.6509804, 0.69803923, 0.6117647, 1)
+theme_override_font_sizes/font_size = 13
+text = "CAMPAIGN PAUSED"
+
+[node name="Leave" type="Button" parent="SettlementVisit/Center/Card/Margin/Body" unique_id=1684168622]
+custom_minimum_size = Vector2(0, 44)
+layout_mode = 2
+focus_neighbor_left = NodePath(".")
+focus_neighbor_top = NodePath(".")
+focus_neighbor_right = NodePath(".")
+focus_neighbor_bottom = NodePath(".")
+focus_next = NodePath(".")
+focus_previous = NodePath(".")
+text = "Leave settlement"

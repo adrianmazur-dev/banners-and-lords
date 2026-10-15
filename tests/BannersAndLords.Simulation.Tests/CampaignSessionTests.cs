@@ -5,6 +5,52 @@ namespace BannersAndLords.Simulation.Tests;
 
 public sealed class CampaignSessionTests
 {
+    private sealed class PausingSystem : ICampaignTickSystem
+    {
+        public ICampaignSession Session { get; set; } = null!;
+        public IDisposable? Hold { get; private set; }
+        public void AdvanceTick(long tick, int elapsedGameMinutes)
+        {
+            if (tick == 1) Hold = Session.HoldPause();
+        }
+    }
+
+    [Fact]
+    public void NestedPauseHoldsAreIdempotentAndPreserveTheOriginalManualPause()
+    {
+        var session = new CampaignSession();
+        session.Advance(0.05);
+        var first = session.HoldPause();
+        var second = session.HoldPause();
+        session.SetPaused(true);
+        session.Advance(100);
+        first.Dispose();
+        first.Dispose();
+        Assert.True(session.IsPauseLocked);
+        Assert.True(session.Status.IsPaused);
+        second.Dispose();
+        Assert.False(session.IsPauseLocked);
+        Assert.False(session.Status.IsPaused);
+        Assert.Equal(0.5, session.TickProgress, 8);
+        session.Advance(0.05);
+        Assert.Equal(1, session.Status.Tick);
+    }
+
+    [Fact]
+    public void PauseDuringATickRetainsBacklogAndStopsBeforeTheNextTick()
+    {
+        var system = new PausingSystem();
+        var session = new CampaignSession(systems: [system]);
+        system.Session = session;
+        session.Advance(0.35);
+        Assert.Equal(1, session.Status.Tick);
+        Assert.True(session.IsPauseLocked);
+        system.Hold!.Dispose();
+        session.Advance(0);
+        Assert.Equal(3, session.Status.Tick);
+        Assert.Equal(0.5, session.TickProgress, 8);
+    }
+
     private sealed class RecordingSystem(string name, List<(string, long, int)> calls) : ICampaignTickSystem
     {
         public void AdvanceTick(long tick, int elapsedGameMinutes) => calls.Add((name, tick, elapsedGameMinutes));

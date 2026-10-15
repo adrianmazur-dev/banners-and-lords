@@ -7,4 +7,5 @@ public interface IPartyTravel
     PartyIdentity Identity { get; }
     PartyStatus Status { get; }
     bool TrySetDestination(Vector2 destination);
+    void Stop();
 }

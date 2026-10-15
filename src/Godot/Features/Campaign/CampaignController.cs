@@ -13,6 +13,7 @@ public partial class CampaignController : Control
 
     private ICampaignSession? _session;
     private CampaignStatus? _lastStatus;
+    private bool _lastPauseLocked;
 
     public void Initialize(ICampaignSession session)
     {
@@ -36,6 +37,14 @@ public partial class CampaignController : Control
     {
         if (_session is null)
         {
+            return;
+        }
+
+        if (_session.IsPauseLocked && (@event.IsActionPressed("campaign_pause", exactMatch: true)
+            || @event.IsActionPressed("campaign_speed_normal", exactMatch: true)
+            || @event.IsActionPressed("campaign_speed_fast", exactMatch: true)))
+        {
+            GetViewport().SetInputAsHandled();
             return;
         }
 
@@ -83,7 +92,10 @@ public partial class CampaignController : Control
 
     private void SetSpeed(CampaignSpeed speed)
     {
-        _session?.SetSpeed(speed);
+        if (_session is { IsPauseLocked: false })
+        {
+            _session.SetSpeed(speed);
+        }
         Refresh(force: true);
     }
 
@@ -95,7 +107,8 @@ public partial class CampaignController : Control
         }
 
         var status = _session.Status;
-        if (!force && status == _lastStatus)
+        var pauseLocked = _session.IsPauseLocked;
+        if (!force && status == _lastStatus && pauseLocked == _lastPauseLocked)
         {
             return;
         }
@@ -103,8 +116,12 @@ public partial class CampaignController : Control
         ClockLabel.Text = $"Day {status.Day}  ·  {status.Hour:00}:{status.Minute:00}";
         StateLabel.Text = $"{(status.IsPaused ? "Paused" : "Running")}  ·  ×{(int)status.Speed}";
         PauseButton.Text = status.IsPaused ? "Resume" : "Pause";
+        PauseButton.Disabled = pauseLocked;
+        NormalSpeedButton.Disabled = pauseLocked;
+        FastSpeedButton.Disabled = pauseLocked;
         NormalSpeedButton.SetPressedNoSignal(status.Speed == CampaignSpeed.Normal);
         FastSpeedButton.SetPressedNoSignal(status.Speed == CampaignSpeed.Fast);
         _lastStatus = status;
+        _lastPauseLocked = pauseLocked;
     }
 }

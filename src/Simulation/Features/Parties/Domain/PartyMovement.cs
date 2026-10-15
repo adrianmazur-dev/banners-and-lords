@@ -44,6 +44,12 @@ internal sealed class PartyMovement
         return true;
     }
 
+    public void Stop()
+    {
+        Destination = null;
+        PreviousPosition = Position;
+    }
+
     public void Advance(int elapsedGameMinutes)
     {
         if (elapsedGameMinutes <= 0)

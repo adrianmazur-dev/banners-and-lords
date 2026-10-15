@@ -13,6 +13,7 @@ public sealed class CampaignSession : ICampaignSession
     private readonly double _secondsPerTick;
     private double _pendingTicks;
     private bool _isPaused;
+    private int _pauseHolds;
     private CampaignSpeed _speed = CampaignSpeed.Normal;
 
     public CampaignSession(double secondsPerTick = 0.1, IEnumerable<ICampaignTickSystem>? systems = null)
@@ -27,9 +28,16 @@ public sealed class CampaignSession : ICampaignSession
     }
 
     public CampaignStatus Status => new(
-        _clock.Tick, _clock.Day, _clock.Hour, _clock.Minute, _isPaused, _speed);
+        _clock.Tick, _clock.Day, _clock.Hour, _clock.Minute, _isPaused || IsPauseLocked, _speed);
 
     public double TickProgress => Math.Clamp(_pendingTicks, 0, 1);
+    public bool IsPauseLocked => _pauseHolds > 0;
+
+    public IDisposable HoldPause()
+    {
+        _pauseHolds++;
+        return new PauseHold(this);
+    }
 
     public void Advance(double elapsedRealSeconds)
     {
@@ -38,7 +46,7 @@ public sealed class CampaignSession : ICampaignSession
             throw new ArgumentOutOfRangeException(nameof(elapsedRealSeconds));
         }
 
-        if (_isPaused)
+        if (_isPaused || IsPauseLocked)
         {
             return;
         }
@@ -50,7 +58,8 @@ public sealed class CampaignSession : ICampaignSession
         }
 
         _pendingTicks = pendingTicks;
-        for (var count = 0; count < MaxTicksPerAdvance && _pendingTicks + TickTolerance >= 1; count++)
+        for (var count = 0; count < MaxTicksPerAdvance && !_isPaused && !IsPauseLocked
+            && _pendingTicks + TickTolerance >= 1; count++)
         {
             _clock.AdvanceTick();
             foreach (var system in _systems)
@@ -62,7 +71,13 @@ public sealed class CampaignSession : ICampaignSession
         }
     }
 
-    public void SetPaused(bool isPaused) => _isPaused = isPaused;
+    public void SetPaused(bool isPaused)
+    {
+        if (!IsPauseLocked)
+        {
+            _isPaused = isPaused;
+        }
+    }
 
     public void SetSpeed(CampaignSpeed speed)
     {
@@ -72,5 +87,19 @@ public sealed class CampaignSession : ICampaignSession
         }
 
         _speed = speed;
+    }
+
+    private sealed class PauseHold(CampaignSession session) : IDisposable
+    {
+        private CampaignSession? _owner = session;
+
+        public void Dispose()
+        {
+            if (_owner is not null)
+            {
+                _owner._pauseHolds--;
+                _owner = null;
+            }
+        }
     }
 }

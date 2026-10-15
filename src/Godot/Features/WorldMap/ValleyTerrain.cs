@@ -58,9 +58,9 @@ public partial class ValleyTerrain : Node2D
         Forest(new Vector2(205, 195), new Vector2(150, 85), 44, random);
         Forest(new Vector2(1000, 555), new Vector2(150, 90), 48, random);
         Forest(new Vector2(1080, 105), new Vector2(70, 42), 15, random);
-        foreach (var landmark in _map.Landmarks)
+        foreach (var settlement in _map.Settlements)
         {
-            Village(new Vector2(landmark.Position.X, landmark.Position.Y), landmark.Name);
+            Village(new Vector2(settlement.Position.X, settlement.Position.Y), settlement.Name);
         }
 
         MapLabel(new Vector2(85, 80), "GREENWOOD", 16, new Color("65704c"));

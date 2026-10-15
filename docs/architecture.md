@@ -15,11 +15,14 @@ These rules govern implementation.
 
 - Simulation owns game state independently of nodes and scenes. Each piece of state has one owner; other modules refer to it by stable identifiers.
 - Dynasties owns noble characters, family membership, and dynasty heads. Parties references commanders by character ID and validates them through Dynasties Contracts; derive the commander's dynasty from the roster instead of duplicating it on the party.
+- Inventory owns the goods catalog and party cargo, linked by party ID. Keep definitions separate from integer quantities. Expose immutable stack snapshots; reject unknown goods, nonpositive amounts, overdraw, and overflow without changing cargo.
 - Godot handles input, presentation, audio, and editor integration. Removing a view or failing an animation must not change simulation results.
 - Advance the campaign through fixed simulation ticks with explicit system ordering. Bound work per frame without dropping pending ticks. Schedule daily economy separately from movement; frame rate must not change the rules.
 - Register tick systems through composition and invoke them once per completed tick in registration order. Expose read-only fractional progress for view interpolation; campaign pause must freeze interpolation too.
 - Store movement in engine-free world coordinates. Validate destinations in simulation; convert pointer coordinates only in Godot. Visual terrain does not implicitly define passability.
+- Settlements owns definitions with stable IDs and world positions, entry radii, and the active visit. WorldMap and Godot reuse those definitions. Validate entry against the party's authoritative position in simulation; entering cancels travel.
 - Keep campaign time, speed, pause, and fractional progress in the session. Pausing must preserve progress and speed without accumulating paused time. Initially, campaign time stops during tactical battles while UI and battle presentation remain active.
+- Mandatory pauses use session-owned holds. Manual pause changes cannot override a hold or alter the prior manual state; only releasing all holds restores it. Active visits own their hold independently of views, and release it once on leaving.
 - Change state through validated commands; expose read-only data through queries. Player and AI actions use the same rules. Publish events only after changes are committed.
 - Coordinate operations spanning modules so they either complete together or leave state unchanged. Apply each battle result to the campaign exactly once.
 

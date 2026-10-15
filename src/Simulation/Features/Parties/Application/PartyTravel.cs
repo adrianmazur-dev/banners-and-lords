@@ -26,6 +26,7 @@ public sealed class PartyTravel : IPartyTravel, ICampaignTickSystem
         _movement.PreviousPosition, _movement.Position, _movement.Destination);
 
     public bool TrySetDestination(Vector2 destination) => _movement.TrySetDestination(destination);
+    public void Stop() => _movement.Stop();
 
     public void AdvanceTick(long tick, int elapsedGameMinutes) => _movement.Advance(elapsedGameMinutes);
 }

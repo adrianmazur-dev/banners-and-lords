@@ -1,4 +1,5 @@
 using System.Numerics;
+using Game.Simulation.Features.Settlements.Contracts;
 using Game.Simulation.Features.WorldMap.Contracts;
 
 namespace Game.Simulation.Features.WorldMap.Application;
@@ -9,9 +10,9 @@ public static class ValleyScenario
 
     public static WorldMapDefinition CreateMap() => new(
         new Vector2(1200, 700),
-        Array.AsReadOnly<MapLandmark>([
-            new("Fallowfield", new Vector2(250, 465)),
-            new("Stoneford", new Vector2(970, 275))
+        Array.AsReadOnly<SettlementDefinition>([
+            new("fallowfield", "Fallowfield", "A farming village surrounded by fields and low hills. Its families work the land along the old north road.", new Vector2(250, 465)),
+            new("stoneford", "Stoneford", "A village on the eastern road above the Alder River. Travelers pass its cottages on their way through the valley.", new Vector2(970, 275))
         ]),
         Array.AsReadOnly<Vector2>([
             new(30, 565), new(170, 510), new(250, 465), new(425, 395),

@@ -13,6 +13,8 @@ Explore and take opportunities → earn resources and recruit soldiers → fight
 ## Core Mechanics
 
 - **Campaign:** continuous world-map travel with active pause; resource sites, caravans, patrols, bandits, and rival lords share the map. Roads, terrain, and crossings should make route choice meaningful; hexes belong to tactical battles.
+- **Settlement visits:** inspect villages from the map, travel to them, and enter when nearby. Entering stops the party and holds campaign time; leaving restores the previous pause state. Arrival alone does not enter a settlement.
+- **Cargo:** each party carries stacks of defined goods. Food, raw materials, and manufactured goods share a catalog so the same goods can support trade, supplies, loot, and deliveries. Cargo is separate from equipment worn by characters.
 - **Combat:** turn-based hex battles with terrain, action points, fatigue, armor, and permanent losses. Experienced soldiers are valuable and replaceable only at a cost.
 - **Expansion:** settle undeveloped land or conquer existing holdings. Independent settlement requires substantial resources and preparation; land ownership is a progression milestone.
 - **Economy:** villages produce resources and recruits; castles depend on deliveries and provide defense and elite training; cities process goods, generate income, and consume food. Supply routes must be protected.
