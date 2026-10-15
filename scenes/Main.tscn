@@ -10,6 +10,7 @@
 [ext_resource type="Script" uid="uid://hm0xa506ahm3" path="res://src/Godot/Features/Parties/PartyPanelController.cs" id="8_lhr70"]
 [ext_resource type="Script" uid="uid://dttu604d85q17" path="res://src/Godot/Features/Dynasties/DynastyPanelController.cs" id="9_wp0k4"]
 [ext_resource type="Script" uid="uid://hqoha5qa6n55" path="res://src/Godot/Features/Settlements/SettlementPanelController.cs" id="10_lhr70"]
+[ext_resource type="PackedScene" uid="uid://c1uhsvi2u8uc3" path="res://scenes/InventoryPanel.tscn" id="11_bjd11"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBox_panel"]
 bg_color = Color(0.11, 0.14, 0.12, 1)
@@ -25,15 +26,31 @@ corner_radius_bottom_left = 4
 
 [sub_resource type="ButtonGroup" id="ButtonGroup_speed"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_lhr70"]
-bg_color = Color(0.08235294, 0.105882354, 0.08627451, 1)
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_wp0k4"]
+bg_color = Color(0.08235294, 0.11764706, 0.08627451, 1)
 border_width_left = 1
 border_width_top = 1
 border_width_right = 1
 border_width_bottom = 1
-border_color = Color(0.25882354, 0.2901961, 0.21568628, 1)
+border_color = Color(0.36, 0.36, 0.27, 1)
 
-[node name="Main" type="Node" unique_id=1028870432 node_paths=PackedStringArray("Runner", "Campaign", "Map", "Party", "Dynasty", "Panels", "Settlement")]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bjd11"]
+bg_color = Color(0.08235294, 0.11764706, 0.08627451, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.36, 0.36, 0.27, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_qmy6f"]
+bg_color = Color(0.08235294, 0.11764706, 0.08627451, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.36, 0.36, 0.27, 1)
+
+[node name="Main" type="Node" unique_id=1028870432 node_paths=PackedStringArray("Runner", "Campaign", "Map", "Party", "Dynasty", "Panels", "Settlement", "Inventory", "InventoryButton")]
 script = ExtResource("1_bootstrap")
 Runner = NodePath("CampaignRunner")
 Campaign = NodePath("Campaign")
@@ -42,6 +59,8 @@ Party = NodePath("CampaignPanels/Party")
 Dynasty = NodePath("CampaignPanels/Dynasty")
 Panels = NodePath("CampaignPanels")
 Settlement = NodePath("CampaignPanels/Settlement")
+Inventory = NodePath("Inventory")
+InventoryButton = NodePath("Campaign/BottomBar/Margin/Row/InventoryButton")
 
 [node name="CampaignRunner" type="Node" parent="." unique_id=334721044]
 script = ExtResource("3_runner")
@@ -233,16 +252,25 @@ size_flags_vertical = 4
 toggle_mode = true
 text = "Dynasty"
 
+[node name="InventoryButton" type="Button" parent="Campaign/BottomBar/Margin/Row" unique_id=404772787]
+custom_minimum_size = Vector2(108, 38)
+layout_mode = 2
+size_flags_vertical = 4
+tooltip_text = "Open inventory (I)"
+text = "Inventory"
+
 [node name="Orders" type="Label" parent="Campaign/BottomBar/Margin/Row" unique_id=1578603645]
 layout_mode = 2
 theme_override_font_sizes/font_size = 16
 text = "Holding position"
 
-[node name="CampaignPanels" type="Control" parent="." unique_id=845789076 node_paths=PackedStringArray("PartyPanel", "DynastyPanel", "SettlementPanel", "PartyButton", "DynastyButton", "PartyCloseButton", "DynastyCloseButton", "CommanderButton", "SettlementCloseButton")]
+[node name="CampaignPanels" type="Control" parent="." unique_id=845789076 node_paths=PackedStringArray("PartyPanel", "DynastyPanel", "SettlementPanel", "PartyButton", "DynastyButton", "PartyCloseButton", "DynastyCloseButton", "CommanderButton", "SettlementCloseButton", "VisitView")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 mouse_filter = 2
 script = ExtResource("7_q8u5g")
 PartyPanel = NodePath("Party")
@@ -254,35 +282,30 @@ PartyCloseButton = NodePath("Party/Margin/Body/Header/Close")
 DynastyCloseButton = NodePath("Dynasty/Margin/Body/Header/Close")
 CommanderButton = NodePath("Party/Margin/Body/Commander")
 SettlementCloseButton = NodePath("Settlement/Margin/Body/Header/Close")
+VisitView = NodePath("../SettlementVisit")
 
-[node name="Party" type="PanelContainer" parent="CampaignPanels" unique_id=2058766386 node_paths=PackedStringArray("CommanderButton", "PartyLabel", "StateLabel", "OrderLabel", "CargoList", "EmptyCargoLabel")]
+[node name="Party" type="PanelContainer" parent="CampaignPanels" unique_id=2058766386 node_paths=PackedStringArray("CommanderButton", "PartyLabel", "StateLabel", "OrderLabel")]
 visible = false
 layout_mode = 0
-anchor_left = 1.0
 anchor_right = 1.0
-offset_left = -364.0
-offset_top = 102.0
-offset_right = -24.0
-offset_bottom = 632.0
-theme_override_styles/panel = SubResource("StyleBox_panel")
+anchor_bottom = 1.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_wp0k4")
 script = ExtResource("8_lhr70")
 CommanderButton = NodePath("Margin/Body/Commander")
 PartyLabel = NodePath("../../Campaign/BottomBar/Margin/Row/PartySummary/Name")
 StateLabel = NodePath("Margin/Body/TravelState")
 OrderLabel = NodePath("Margin/Body/Order")
-CargoList = NodePath("Margin/Body/Cargo")
-EmptyCargoLabel = NodePath("Margin/Body/EmptyCargo")
 
 [node name="Margin" type="MarginContainer" parent="CampaignPanels/Party" unique_id=998027391]
 layout_mode = 2
-theme_override_constants/margin_left = 20
-theme_override_constants/margin_top = 20
-theme_override_constants/margin_right = 20
-theme_override_constants/margin_bottom = 20
+theme_override_constants/margin_left = 32
+theme_override_constants/margin_top = 32
+theme_override_constants/margin_right = 32
+theme_override_constants/margin_bottom = 32
 
 [node name="Body" type="VBoxContainer" parent="CampaignPanels/Party/Margin" unique_id=1252826939]
 layout_mode = 2
-theme_override_constants/separation = 10
+theme_override_constants/separation = 18
 
 [node name="Header" type="HBoxContainer" parent="CampaignPanels/Party/Margin/Body" unique_id=460302322]
 layout_mode = 2
@@ -291,11 +314,11 @@ layout_mode = 2
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_color = Color(0.87058824, 0.8, 0.6, 1)
-theme_override_font_sizes/font_size = 21
+theme_override_font_sizes/font_size = 28
 text = "Party"
 
 [node name="Close" type="Button" parent="CampaignPanels/Party/Margin/Body/Header" unique_id=934696190]
-custom_minimum_size = Vector2(64, 32)
+custom_minimum_size = Vector2(90, 42)
 layout_mode = 2
 text = "Close"
 
@@ -342,39 +365,12 @@ theme_override_colors/font_color = Color(0.87058824, 0.827451, 0.6901961, 1)
 theme_override_font_sizes/font_size = 16
 text = "No movement order"
 
-[node name="CargoHeading" type="Label" parent="CampaignPanels/Party/Margin/Body" unique_id=1528558298]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.6509804, 0.69803923, 0.6117647, 1)
-theme_override_font_sizes/font_size = 12
-text = "CARGO"
-
-[node name="EmptyCargo" type="Label" parent="CampaignPanels/Party/Margin/Body" unique_id=1535273836]
-visible = false
-layout_mode = 2
-theme_override_colors/font_color = Color(0.6509804, 0.69803923, 0.6117647, 1)
-theme_override_font_sizes/font_size = 16
-text = "No cargo."
-
-[node name="Cargo" type="Tree" parent="CampaignPanels/Party/Margin/Body" unique_id=952362485]
-custom_minimum_size = Vector2(0, 140)
-layout_mode = 2
-size_flags_vertical = 3
-theme_override_colors/font_color = Color(0.87058824, 0.827451, 0.6901961, 1)
-theme_override_styles/panel = SubResource("StyleBoxFlat_lhr70")
-columns = 2
-column_titles_visible = true
-hide_root = true
-
 [node name="Dynasty" type="PanelContainer" parent="CampaignPanels" unique_id=567160983 node_paths=PackedStringArray("DynastyLabel", "HeadLabel", "MembersHeading", "MembersLabel")]
 visible = false
 layout_mode = 0
-anchor_left = 1.0
 anchor_right = 1.0
-offset_left = -364.0
-offset_top = 102.0
-offset_right = -24.0
-offset_bottom = 442.0
-theme_override_styles/panel = SubResource("StyleBox_panel")
+anchor_bottom = 1.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_bjd11")
 script = ExtResource("9_wp0k4")
 DynastyLabel = NodePath("Margin/Body/Dynasty")
 HeadLabel = NodePath("Margin/Body/Head")
@@ -383,14 +379,14 @@ MembersLabel = NodePath("Margin/Body/Members")
 
 [node name="Margin" type="MarginContainer" parent="CampaignPanels/Dynasty" unique_id=1121556133]
 layout_mode = 2
-theme_override_constants/margin_left = 20
-theme_override_constants/margin_top = 20
-theme_override_constants/margin_right = 20
-theme_override_constants/margin_bottom = 20
+theme_override_constants/margin_left = 32
+theme_override_constants/margin_top = 32
+theme_override_constants/margin_right = 32
+theme_override_constants/margin_bottom = 32
 
 [node name="Body" type="VBoxContainer" parent="CampaignPanels/Dynasty/Margin" unique_id=877115911]
 layout_mode = 2
-theme_override_constants/separation = 10
+theme_override_constants/separation = 18
 
 [node name="Header" type="HBoxContainer" parent="CampaignPanels/Dynasty/Margin/Body" unique_id=1745343389]
 layout_mode = 2
@@ -399,11 +395,11 @@ layout_mode = 2
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_color = Color(0.87058824, 0.8, 0.6, 1)
-theme_override_font_sizes/font_size = 21
+theme_override_font_sizes/font_size = 28
 text = "Dynasty"
 
 [node name="Close" type="Button" parent="CampaignPanels/Dynasty/Margin/Body/Header" unique_id=40658688]
-custom_minimum_size = Vector2(64, 32)
+custom_minimum_size = Vector2(90, 42)
 layout_mode = 2
 text = "Close"
 
@@ -443,13 +439,9 @@ theme_override_font_sizes/font_size = 16
 [node name="Settlement" type="PanelContainer" parent="CampaignPanels" unique_id=138751971 node_paths=PackedStringArray("NameLabel", "DescriptionLabel", "AccessLabel", "TravelButton", "EnterButton", "VisitView", "VisitNameLabel", "VisitDescriptionLabel", "LeaveButton")]
 visible = false
 layout_mode = 0
-anchor_left = 1.0
 anchor_right = 1.0
-offset_left = -364.0
-offset_top = 102.0
-offset_right = -24.0
-offset_bottom = 462.0
-theme_override_styles/panel = SubResource("StyleBox_panel")
+anchor_bottom = 1.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_qmy6f")
 script = ExtResource("10_lhr70")
 NameLabel = NodePath("Margin/Body/Name")
 DescriptionLabel = NodePath("Margin/Body/Description")
@@ -457,20 +449,20 @@ AccessLabel = NodePath("Margin/Body/Access")
 TravelButton = NodePath("Margin/Body/Actions/Travel")
 EnterButton = NodePath("Margin/Body/Actions/Enter")
 VisitView = NodePath("../../SettlementVisit")
-VisitNameLabel = NodePath("../../SettlementVisit/Center/Card/Margin/Body/Name")
-VisitDescriptionLabel = NodePath("../../SettlementVisit/Center/Card/Margin/Body/Description")
-LeaveButton = NodePath("../../SettlementVisit/Center/Card/Margin/Body/Leave")
+VisitNameLabel = NodePath("../../SettlementVisit/Card/Margin/Body/Name")
+VisitDescriptionLabel = NodePath("../../SettlementVisit/Card/Margin/Body/Description")
+LeaveButton = NodePath("../../SettlementVisit/Card/Margin/Body/Leave")
 
 [node name="Margin" type="MarginContainer" parent="CampaignPanels/Settlement" unique_id=1791171638]
 layout_mode = 2
-theme_override_constants/margin_left = 20
-theme_override_constants/margin_top = 20
-theme_override_constants/margin_right = 20
-theme_override_constants/margin_bottom = 20
+theme_override_constants/margin_left = 32
+theme_override_constants/margin_top = 32
+theme_override_constants/margin_right = 32
+theme_override_constants/margin_bottom = 32
 
 [node name="Body" type="VBoxContainer" parent="CampaignPanels/Settlement/Margin" unique_id=489027713]
 layout_mode = 2
-theme_override_constants/separation = 14
+theme_override_constants/separation = 18
 
 [node name="Header" type="HBoxContainer" parent="CampaignPanels/Settlement/Margin/Body" unique_id=303282386]
 layout_mode = 2
@@ -479,11 +471,11 @@ layout_mode = 2
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_color = Color(0.87058824, 0.8, 0.6, 1)
-theme_override_font_sizes/font_size = 21
+theme_override_font_sizes/font_size = 28
 text = "Village"
 
 [node name="Close" type="Button" parent="CampaignPanels/Settlement/Margin/Body/Header" unique_id=1270316799]
-custom_minimum_size = Vector2(64, 32)
+custom_minimum_size = Vector2(90, 42)
 layout_mode = 2
 text = "Close"
 
@@ -534,68 +526,61 @@ layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 
-[node name="Shade" type="ColorRect" parent="SettlementVisit" unique_id=2055444707]
+[node name="Card" type="PanelContainer" parent="SettlementVisit" unique_id=1242822319]
 layout_mode = 0
 anchor_right = 1.0
 anchor_bottom = 1.0
-mouse_filter = 2
-color = Color(0.035, 0.05, 0.04, 0.85)
+theme_override_styles/panel = SubResource("StyleBoxFlat_wp0k4")
 
-[node name="Center" type="CenterContainer" parent="SettlementVisit" unique_id=940743888]
-layout_mode = 0
-anchor_right = 1.0
-anchor_bottom = 1.0
-mouse_filter = 2
-
-[node name="Card" type="PanelContainer" parent="SettlementVisit/Center" unique_id=1242822319]
-custom_minimum_size = Vector2(560, 380)
-layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBox_panel")
-
-[node name="Margin" type="MarginContainer" parent="SettlementVisit/Center/Card" unique_id=1153866951]
+[node name="Margin" type="MarginContainer" parent="SettlementVisit/Card" unique_id=1153866951]
 layout_mode = 2
 theme_override_constants/margin_left = 28
 theme_override_constants/margin_top = 28
 theme_override_constants/margin_right = 28
 theme_override_constants/margin_bottom = 28
 
-[node name="Body" type="VBoxContainer" parent="SettlementVisit/Center/Card/Margin" unique_id=2091893143]
+[node name="Body" type="VBoxContainer" parent="SettlementVisit/Card/Margin" unique_id=2091893143]
 layout_mode = 2
 theme_override_constants/separation = 18
 
-[node name="Type" type="Label" parent="SettlementVisit/Center/Card/Margin/Body" unique_id=2136923016]
+[node name="Type" type="Label" parent="SettlementVisit/Card/Margin/Body" unique_id=2136923016]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.6509804, 0.69803923, 0.6117647, 1)
 theme_override_font_sizes/font_size = 13
 text = "VILLAGE"
 
-[node name="Name" type="Label" parent="SettlementVisit/Center/Card/Margin/Body" unique_id=506890954]
+[node name="Name" type="Label" parent="SettlementVisit/Card/Margin/Body" unique_id=506890954]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.8901961, 0.7607843, 0.46666667, 1)
 theme_override_font_sizes/font_size = 32
 text = "Village"
 
-[node name="Description" type="Label" parent="SettlementVisit/Center/Card/Margin/Body" unique_id=1393162333]
-custom_minimum_size = Vector2(504, 0)
+[node name="Description" type="Label" parent="SettlementVisit/Card/Margin/Body" unique_id=1393162333]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.87058824, 0.827451, 0.6901961, 1)
 theme_override_font_sizes/font_size = 18
 autowrap_mode = 3
 
-[node name="Status" type="Label" parent="SettlementVisit/Center/Card/Margin/Body" unique_id=1838265776]
+[node name="Status" type="Label" parent="SettlementVisit/Card/Margin/Body" unique_id=1838265776]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.87058824, 0.827451, 0.6901961, 1)
 theme_override_font_sizes/font_size = 16
 text = "Your party is visiting the village."
 
-[node name="Time" type="Label" parent="SettlementVisit/Center/Card/Margin/Body" unique_id=1016453467]
+[node name="Time" type="Label" parent="SettlementVisit/Card/Margin/Body" unique_id=1016453467]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.6509804, 0.69803923, 0.6117647, 1)
 theme_override_font_sizes/font_size = 13
 text = "CAMPAIGN PAUSED"
 
-[node name="Leave" type="Button" parent="SettlementVisit/Center/Card/Margin/Body" unique_id=1684168622]
+[node name="Space" type="Control" parent="SettlementVisit/Card/Margin/Body" unique_id=2038153450]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Leave" type="Button" parent="SettlementVisit/Card/Margin/Body" unique_id=1684168622]
 custom_minimum_size = Vector2(0, 44)
 layout_mode = 2
 focus_neighbor_left = NodePath(".")
@@ -605,3 +590,7 @@ focus_neighbor_bottom = NodePath(".")
 focus_next = NodePath(".")
 focus_previous = NodePath(".")
 text = "Leave settlement"
+
+[node name="Inventory" parent="." unique_id=643933521 instance=ExtResource("11_bjd11")]
+grow_horizontal = 2
+grow_vertical = 2

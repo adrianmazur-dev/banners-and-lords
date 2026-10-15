@@ -1,0 +1,701 @@
+[gd_scene format=3 uid="uid://c1uhsvi2u8uc3"]
+
+[ext_resource type="Script" uid="uid://xoi0j56571f6" path="res://src/Godot/Features/Inventory/InventoryPanelController.cs" id="1_jhoqf"]
+[ext_resource type="Texture2D" uid="uid://dcj0tutep5gul" path="res://assets/ui/inventory/close.svg" id="2_u6ld0"]
+[ext_resource type="Texture2D" uid="uid://c4i4i2qidxvlg" path="res://assets/ui/inventory/bag.svg" id="3_5f6lk"]
+[ext_resource type="Texture2D" uid="uid://dive5pt7pqt3l" path="res://assets/ui/inventory/sword.svg" id="4_qhhnr"]
+[ext_resource type="Texture2D" uid="uid://bgiil1ib5wu2e" path="res://assets/ui/inventory/helmet.svg" id="5_s7ge3"]
+[ext_resource type="Texture2D" uid="uid://cla0bf0in8h8r" path="res://assets/ui/inventory/bread.svg" id="6_2b8xv"]
+[ext_resource type="Texture2D" uid="uid://bqro6pwgqnw0l" path="res://assets/ui/inventory/timber.svg" id="7_fncub"]
+[ext_resource type="Texture2D" uid="uid://d3ckree1l6ldt" path="res://assets/ui/inventory/tools.svg" id="8_gry8w"]
+[ext_resource type="Texture2D" uid="uid://dlf4dyns7qi3q" path="res://assets/ui/inventory/character.svg" id="9_qhcge"]
+[ext_resource type="Texture2D" uid="uid://cw8upoynes4nf" path="res://assets/ui/inventory/gloves.svg" id="10_d0kg8"]
+[ext_resource type="Texture2D" uid="uid://180n5tvdwhyl" path="res://assets/ui/inventory/armor.svg" id="11_m305s"]
+[ext_resource type="Texture2D" uid="uid://2jxbdmo76dp6" path="res://assets/ui/inventory/shield.svg" id="12_v3os4"]
+[ext_resource type="Texture2D" uid="uid://dcjr6ct5nrica" path="res://assets/ui/inventory/boots.svg" id="13_cwvhr"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_gg3d7"]
+content_margin_left = 8.0
+content_margin_top = 6.0
+content_margin_right = 8.0
+content_margin_bottom = 6.0
+bg_color = Color(0.078431375, 0.105882354, 0.08235294, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.1882353, 0.23137255, 0.17254902, 1)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_kk084"]
+content_margin_left = 8.0
+content_margin_top = 6.0
+content_margin_right = 8.0
+content_margin_bottom = 6.0
+bg_color = Color(0.2, 0.23137255, 0.16078432, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.8235294, 0.7137255, 0.45490196, 1)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_sv5hl"]
+content_margin_left = 8.0
+content_margin_top = 6.0
+content_margin_right = 8.0
+content_margin_bottom = 6.0
+bg_color = Color(0.16862746, 0.20392157, 0.15294118, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.7058824, 0.60784316, 0.39607844, 1)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hu4y6"]
+content_margin_left = 8.0
+content_margin_top = 6.0
+content_margin_right = 8.0
+content_margin_bottom = 6.0
+bg_color = Color(0.11372549, 0.14901961, 0.11764706, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.29803923, 0.3137255, 0.23137255, 1)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_dqwwn"]
+content_margin_left = 8.0
+content_margin_top = 6.0
+content_margin_right = 8.0
+content_margin_bottom = 6.0
+bg_color = Color(0.0627451, 0.09411765, 0.0627451, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.54509807, 0.5019608, 0.34509805, 1)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+
+[sub_resource type="Theme" id="Theme_tnbe8"]
+default_font_size = 16
+Button/colors/font_color = Color(0.8352941, 0.8117647, 0.7058824, 1)
+Button/styles/disabled = SubResource("StyleBoxFlat_gg3d7")
+Button/styles/focus = SubResource("StyleBoxFlat_kk084")
+Button/styles/hover = SubResource("StyleBoxFlat_sv5hl")
+Button/styles/normal = SubResource("StyleBoxFlat_hu4y6")
+Button/styles/pressed = SubResource("StyleBoxFlat_kk084")
+TooltipPanel/styles/panel = SubResource("StyleBoxFlat_dqwwn")
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_u6ld0"]
+content_margin_left = 8.0
+content_margin_top = 6.0
+content_margin_right = 8.0
+content_margin_bottom = 6.0
+bg_color = Color(0.11372549, 0.14901961, 0.11764706, 1)
+border_width_bottom = 1
+border_color = Color(0.29803923, 0.3137255, 0.23137255, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_5f6lk"]
+content_margin_left = 8.0
+content_margin_top = 6.0
+content_margin_right = 8.0
+content_margin_bottom = 6.0
+bg_color = Color(0.16862746, 0.20392157, 0.15294118, 1)
+border_width_bottom = 1
+border_color = Color(0.7058824, 0.60784316, 0.39607844, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_qhhnr"]
+content_margin_left = 8.0
+content_margin_top = 6.0
+content_margin_right = 8.0
+content_margin_bottom = 6.0
+bg_color = Color(0.2, 0.23137255, 0.16078432, 1)
+border_width_left = 2
+border_width_bottom = 1
+border_color = Color(0.8235294, 0.7137255, 0.45490196, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_jhoqf"]
+content_margin_left = 8.0
+content_margin_top = 6.0
+content_margin_right = 8.0
+content_margin_bottom = 6.0
+bg_color = Color(0.08235294, 0.11764706, 0.08627451, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.50980395, 0.4627451, 0.30980393, 1)
+
+[sub_resource type="StyleBoxLine" id="StyleBoxLine_uhis7"]
+color = Color(0.32941177, 0.34117648, 0.24313726, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_dc2wg"]
+content_margin_left = 8.0
+content_margin_top = 6.0
+content_margin_right = 8.0
+content_margin_bottom = 6.0
+bg_color = Color(0.06666667, 0.101960786, 0.07450981, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.23529412, 0.2784314, 0.19607843, 1)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+
+[node name="Inventory" type="Control" unique_id=643933521 node_paths=PackedStringArray("CloseButton", "CategoryBar", "ItemList", "CharacterStage", "CharacterName", "HouseName", "CategoryHeading", "ItemCount", "DetailName", "ActionButton", "Hint", "Summary")]
+visible = false
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+theme = SubResource("Theme_tnbe8")
+script = ExtResource("1_jhoqf")
+CloseButton = NodePath("Card/Margin/Body/Header/Close")
+CategoryBar = NodePath("Card/Margin/Body/Columns/Character/Categories")
+ItemList = NodePath("Card/Margin/Body/Columns/Items/Scroll/List")
+CharacterStage = NodePath("Card/Margin/Body/Columns/Character/Portrait/Stage")
+CharacterName = NodePath("Card/Margin/Body/Columns/Character/Name")
+HouseName = NodePath("Card/Margin/Body/Columns/Character/House")
+CategoryHeading = NodePath("Card/Margin/Body/Columns/Items/Header/Category")
+ItemCount = NodePath("Card/Margin/Body/Columns/Items/Header/Count")
+DetailName = NodePath("Card/Margin/Body/Columns/Items/Selection/Name")
+ActionButton = NodePath("Card/Margin/Body/Columns/Items/Selection/Action")
+Hint = NodePath("Card/Margin/Body/Footer/Hint")
+Summary = NodePath("Card/Margin/Body/Footer/Summary")
+RowNormal = SubResource("StyleBoxFlat_u6ld0")
+RowHover = SubResource("StyleBoxFlat_5f6lk")
+RowSelected = SubResource("StyleBoxFlat_qhhnr")
+
+[node name="Card" type="PanelContainer" parent="." unique_id=938963324]
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_jhoqf")
+
+[node name="Margin" type="MarginContainer" parent="Card" unique_id=1088722766]
+layout_mode = 2
+theme_override_constants/margin_left = 24
+theme_override_constants/margin_top = 24
+theme_override_constants/margin_right = 24
+theme_override_constants/margin_bottom = 24
+
+[node name="Body" type="VBoxContainer" parent="Card/Margin" unique_id=588480135]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="Header" type="HBoxContainer" parent="Card/Margin/Body" unique_id=1979885042]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="Titles" type="VBoxContainer" parent="Card/Margin/Body/Header" unique_id=1066621733]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 0
+
+[node name="Eyebrow" type="Label" parent="Card/Margin/Body/Header/Titles" unique_id=1683766271]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.65882355, 0.60784316, 0.4392157, 1)
+theme_override_font_sizes/font_size = 11
+text = "CHARACTER & BELONGINGS"
+
+[node name="Title" type="Label" parent="Card/Margin/Body/Header/Titles" unique_id=92176030]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.8784314, 0.8352941, 0.6784314, 1)
+theme_override_font_sizes/font_size = 27
+text = "Inventory"
+
+[node name="Close" type="Button" parent="Card/Margin/Body/Header" unique_id=398739859]
+custom_minimum_size = Vector2(42, 42)
+layout_mode = 2
+size_flags_vertical = 4
+tooltip_text = "Close inventory (Esc / I)"
+icon = ExtResource("2_u6ld0")
+
+[node name="Divider" type="HSeparator" parent="Card/Margin/Body" unique_id=488144941]
+layout_mode = 2
+theme_override_styles/separator = SubResource("StyleBoxLine_uhis7")
+
+[node name="Columns" type="HBoxContainer" parent="Card/Margin/Body" unique_id=1919285979]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 24
+
+[node name="CounterpartySpace" type="Control" parent="Card/Margin/Body/Columns" unique_id=1745933554]
+custom_minimum_size = Vector2(320, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_filter = 2
+
+[node name="Character" type="VBoxContainer" parent="Card/Margin/Body/Columns" unique_id=357344260]
+custom_minimum_size = Vector2(360, 0)
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="Name" type="Label" parent="Card/Margin/Body/Columns/Character" unique_id=993313362]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.8666667, 0.7882353, 0.5686275, 1)
+theme_override_font_sizes/font_size = 21
+text = "Aldric Ashford"
+horizontal_alignment = 1
+
+[node name="House" type="Label" parent="Card/Margin/Body/Columns/Character" unique_id=145147935]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.60784316, 0.64705884, 0.54901963, 1)
+theme_override_font_sizes/font_size = 14
+text = "House Ashford"
+horizontal_alignment = 1
+
+[node name="Categories" type="HBoxContainer" parent="Card/Margin/Body/Columns/Character" unique_id=276178870]
+layout_mode = 2
+theme_override_constants/separation = 8
+alignment = 1
+
+[node name="All" type="Button" parent="Card/Margin/Body/Columns/Character/Categories" unique_id=69695867]
+custom_minimum_size = Vector2(46, 44)
+layout_mode = 2
+tooltip_text = "All items"
+theme_override_constants/icon_max_width = 28
+toggle_mode = true
+icon = ExtResource("3_5f6lk")
+expand_icon = true
+metadata/category = "All"
+
+[node name="Weapons" type="Button" parent="Card/Margin/Body/Columns/Character/Categories" unique_id=383822247]
+custom_minimum_size = Vector2(46, 44)
+layout_mode = 2
+tooltip_text = "Weapons"
+theme_override_constants/icon_max_width = 28
+toggle_mode = true
+icon = ExtResource("4_qhhnr")
+expand_icon = true
+metadata/category = "Weapons"
+
+[node name="Armor" type="Button" parent="Card/Margin/Body/Columns/Character/Categories" unique_id=1466589852]
+custom_minimum_size = Vector2(46, 44)
+layout_mode = 2
+tooltip_text = "Armor"
+theme_override_constants/icon_max_width = 28
+toggle_mode = true
+icon = ExtResource("5_s7ge3")
+expand_icon = true
+metadata/category = "Armor"
+
+[node name="Food" type="Button" parent="Card/Margin/Body/Columns/Character/Categories" unique_id=855227315]
+custom_minimum_size = Vector2(46, 44)
+layout_mode = 2
+tooltip_text = "Food"
+theme_override_constants/icon_max_width = 28
+toggle_mode = true
+icon = ExtResource("6_2b8xv")
+expand_icon = true
+metadata/category = "Food"
+
+[node name="Materials" type="Button" parent="Card/Margin/Body/Columns/Character/Categories" unique_id=529581449]
+custom_minimum_size = Vector2(46, 44)
+layout_mode = 2
+tooltip_text = "Materials"
+theme_override_constants/icon_max_width = 28
+toggle_mode = true
+icon = ExtResource("7_fncub")
+expand_icon = true
+metadata/category = "Materials"
+
+[node name="Goods" type="Button" parent="Card/Margin/Body/Columns/Character/Categories" unique_id=1914896894]
+custom_minimum_size = Vector2(46, 44)
+layout_mode = 2
+tooltip_text = "Goods"
+theme_override_constants/icon_max_width = 28
+toggle_mode = true
+icon = ExtResource("8_gry8w")
+expand_icon = true
+metadata/category = "Goods"
+
+[node name="Heading" type="Label" parent="Card/Margin/Body/Columns/Character" unique_id=687323758]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.65882355, 0.60784316, 0.4392157, 1)
+theme_override_font_sizes/font_size = 12
+text = "EQUIPMENT"
+horizontal_alignment = 1
+
+[node name="Portrait" type="PanelContainer" parent="Card/Margin/Body/Columns/Character" unique_id=1053717979]
+custom_minimum_size = Vector2(0, 360)
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_dc2wg")
+
+[node name="Stage" type="Control" parent="Card/Margin/Body/Columns/Character/Portrait" unique_id=171164638]
+custom_minimum_size = Vector2(310, 340)
+layout_mode = 2
+size_flags_vertical = 3
+mouse_filter = 2
+
+[node name="Figure" type="TextureRect" parent="Card/Margin/Body/Columns/Character/Portrait/Stage" unique_id=149833178]
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 54.0
+offset_right = -54.0
+offset_bottom = -4.0
+mouse_filter = 2
+texture = ExtResource("9_qhcge")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="OffhandLayer" type="TextureRect" parent="Card/Margin/Body/Columns/Character/Portrait/Stage" unique_id=257073551]
+visible = false
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 54.0
+offset_right = -54.0
+offset_bottom = -4.0
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="MainhandLayer" type="TextureRect" parent="Card/Margin/Body/Columns/Character/Portrait/Stage" unique_id=230086398]
+visible = false
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 54.0
+offset_right = -54.0
+offset_bottom = -4.0
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="FeetLayer" type="TextureRect" parent="Card/Margin/Body/Columns/Character/Portrait/Stage" unique_id=454081131]
+visible = false
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 54.0
+offset_right = -54.0
+offset_bottom = -4.0
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="HandsLayer" type="TextureRect" parent="Card/Margin/Body/Columns/Character/Portrait/Stage" unique_id=1304331861]
+visible = false
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 54.0
+offset_right = -54.0
+offset_bottom = -4.0
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="BodyLayer" type="TextureRect" parent="Card/Margin/Body/Columns/Character/Portrait/Stage" unique_id=1814634217]
+visible = false
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 54.0
+offset_right = -54.0
+offset_bottom = -4.0
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="HeadLayer" type="TextureRect" parent="Card/Margin/Body/Columns/Character/Portrait/Stage" unique_id=2041295264]
+visible = false
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 54.0
+offset_right = -54.0
+offset_bottom = -4.0
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Head" type="Button" parent="Card/Margin/Body/Columns/Character/Portrait/Stage" unique_id=841212119]
+layout_mode = 0
+anchor_top = 0.18
+anchor_bottom = 0.18
+offset_left = 8.0
+offset_top = -26.0
+offset_right = 60.0
+offset_bottom = 26.0
+tooltip_text = "Head slot"
+mouse_default_cursor_shape = 2
+theme_override_colors/icon_disabled_color = Color(0.65, 0.66, 0.52, 0.55)
+theme_override_constants/icon_max_width = 32
+icon = ExtResource("5_s7ge3")
+expand_icon = true
+
+[node name="HeadLabel" type="Label" parent="Card/Margin/Body/Columns/Character/Portrait/Stage" unique_id=1692729137]
+layout_mode = 0
+anchor_top = 0.18
+anchor_bottom = 0.18
+offset_top = 29.0
+offset_right = 70.0
+offset_bottom = 46.0
+theme_override_colors/font_color = Color(0.5058824, 0.53333336, 0.42352942, 1)
+theme_override_font_sizes/font_size = 9
+text = "HEAD"
+horizontal_alignment = 1
+
+[node name="Hands" type="Button" parent="Card/Margin/Body/Columns/Character/Portrait/Stage" unique_id=187822922]
+layout_mode = 0
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_left = 8.0
+offset_top = -26.0
+offset_right = 60.0
+offset_bottom = 26.0
+tooltip_text = "Hands slot"
+mouse_default_cursor_shape = 2
+theme_override_colors/icon_disabled_color = Color(0.65, 0.66, 0.52, 0.55)
+theme_override_constants/icon_max_width = 32
+icon = ExtResource("10_d0kg8")
+expand_icon = true
+
+[node name="HandsLabel" type="Label" parent="Card/Margin/Body/Columns/Character/Portrait/Stage" unique_id=1916735541]
+layout_mode = 0
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_top = 29.0
+offset_right = 70.0
+offset_bottom = 46.0
+theme_override_colors/font_color = Color(0.5058824, 0.53333336, 0.42352942, 1)
+theme_override_font_sizes/font_size = 9
+text = "HANDS"
+horizontal_alignment = 1
+
+[node name="Mainhand" type="Button" parent="Card/Margin/Body/Columns/Character/Portrait/Stage" unique_id=1754548578]
+layout_mode = 0
+anchor_top = 0.82
+anchor_bottom = 0.82
+offset_left = 8.0
+offset_top = -26.0
+offset_right = 60.0
+offset_bottom = 26.0
+tooltip_text = "Main hand slot"
+mouse_default_cursor_shape = 2
+theme_override_colors/icon_disabled_color = Color(0.65, 0.66, 0.52, 0.55)
+theme_override_constants/icon_max_width = 32
+icon = ExtResource("4_qhhnr")
+expand_icon = true
+
+[node name="MainhandLabel" type="Label" parent="Card/Margin/Body/Columns/Character/Portrait/Stage" unique_id=1298622437]
+layout_mode = 0
+anchor_top = 0.82
+anchor_bottom = 0.82
+offset_top = 29.0
+offset_right = 70.0
+offset_bottom = 46.0
+theme_override_colors/font_color = Color(0.5058824, 0.53333336, 0.42352942, 1)
+theme_override_font_sizes/font_size = 9
+text = "MAIN HAND"
+horizontal_alignment = 1
+
+[node name="Body" type="Button" parent="Card/Margin/Body/Columns/Character/Portrait/Stage" unique_id=1153720359]
+layout_mode = 0
+anchor_left = 1.0
+anchor_top = 0.18
+anchor_right = 1.0
+anchor_bottom = 0.18
+offset_left = -60.0
+offset_top = -26.0
+offset_right = -8.0
+offset_bottom = 26.0
+tooltip_text = "Body slot"
+mouse_default_cursor_shape = 2
+theme_override_colors/icon_disabled_color = Color(0.65, 0.66, 0.52, 0.55)
+theme_override_constants/icon_max_width = 32
+icon = ExtResource("11_m305s")
+expand_icon = true
+
+[node name="BodyLabel" type="Label" parent="Card/Margin/Body/Columns/Character/Portrait/Stage" unique_id=1231470696]
+layout_mode = 0
+anchor_left = 1.0
+anchor_top = 0.18
+anchor_right = 1.0
+anchor_bottom = 0.18
+offset_left = -70.0
+offset_top = 29.0
+offset_bottom = 46.0
+theme_override_colors/font_color = Color(0.5058824, 0.53333336, 0.42352942, 1)
+theme_override_font_sizes/font_size = 9
+text = "BODY"
+horizontal_alignment = 1
+
+[node name="Offhand" type="Button" parent="Card/Margin/Body/Columns/Character/Portrait/Stage" unique_id=246806819]
+layout_mode = 0
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = -60.0
+offset_top = -26.0
+offset_right = -8.0
+offset_bottom = 26.0
+tooltip_text = "Off hand slot"
+mouse_default_cursor_shape = 2
+theme_override_colors/icon_disabled_color = Color(0.65, 0.66, 0.52, 0.55)
+theme_override_constants/icon_max_width = 32
+icon = ExtResource("12_v3os4")
+expand_icon = true
+
+[node name="OffhandLabel" type="Label" parent="Card/Margin/Body/Columns/Character/Portrait/Stage" unique_id=1776378803]
+layout_mode = 0
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = -70.0
+offset_top = 29.0
+offset_bottom = 46.0
+theme_override_colors/font_color = Color(0.5058824, 0.53333336, 0.42352942, 1)
+theme_override_font_sizes/font_size = 9
+text = "OFF HAND"
+horizontal_alignment = 1
+
+[node name="Feet" type="Button" parent="Card/Margin/Body/Columns/Character/Portrait/Stage" unique_id=1236665868]
+layout_mode = 0
+anchor_left = 1.0
+anchor_top = 0.82
+anchor_right = 1.0
+anchor_bottom = 0.82
+offset_left = -60.0
+offset_top = -26.0
+offset_right = -8.0
+offset_bottom = 26.0
+tooltip_text = "Feet slot"
+mouse_default_cursor_shape = 2
+theme_override_colors/icon_disabled_color = Color(0.65, 0.66, 0.52, 0.55)
+theme_override_constants/icon_max_width = 32
+icon = ExtResource("13_cwvhr")
+expand_icon = true
+
+[node name="FeetLabel" type="Label" parent="Card/Margin/Body/Columns/Character/Portrait/Stage" unique_id=1125510811]
+layout_mode = 0
+anchor_left = 1.0
+anchor_top = 0.82
+anchor_right = 1.0
+anchor_bottom = 0.82
+offset_left = -70.0
+offset_top = 29.0
+offset_bottom = 46.0
+theme_override_colors/font_color = Color(0.5058824, 0.53333336, 0.42352942, 1)
+theme_override_font_sizes/font_size = 9
+text = "FEET"
+horizontal_alignment = 1
+
+[node name="Items" type="VBoxContainer" parent="Card/Margin/Body/Columns" unique_id=793968165]
+custom_minimum_size = Vector2(320, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 10
+
+[node name="Header" type="HBoxContainer" parent="Card/Margin/Body/Columns/Items" unique_id=1371958044]
+layout_mode = 2
+
+[node name="Category" type="Label" parent="Card/Margin/Body/Columns/Items/Header" unique_id=545117652]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.73333335, 0.68235296, 0.49411765, 1)
+theme_override_font_sizes/font_size = 13
+text = "PARTY INVENTORY"
+
+[node name="Count" type="Label" parent="Card/Margin/Body/Columns/Items/Header" unique_id=1563996180]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.5568628, 0.60784316, 0.5019608, 1)
+theme_override_font_sizes/font_size = 13
+
+[node name="ColumnHeaders" type="HBoxContainer" parent="Card/Margin/Body/Columns/Items" unique_id=1942962015]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="Type" type="Label" parent="Card/Margin/Body/Columns/Items/ColumnHeaders" unique_id=1715550369]
+custom_minimum_size = Vector2(52, 0)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.5686275, 0.60784316, 0.5019608, 1)
+theme_override_font_sizes/font_size = 12
+text = "Type"
+
+[node name="Name" type="Label" parent="Card/Margin/Body/Columns/Items/ColumnHeaders" unique_id=1805806788]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.5686275, 0.60784316, 0.5019608, 1)
+theme_override_font_sizes/font_size = 12
+text = "Name"
+
+[node name="Quantity" type="Label" parent="Card/Margin/Body/Columns/Items/ColumnHeaders" unique_id=848593921]
+custom_minimum_size = Vector2(54, 0)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.5686275, 0.60784316, 0.5019608, 1)
+theme_override_font_sizes/font_size = 12
+text = "Qty"
+horizontal_alignment = 1
+
+[node name="Scroll" type="ScrollContainer" parent="Card/Margin/Body/Columns/Items" unique_id=1144797806]
+layout_mode = 2
+size_flags_vertical = 3
+follow_focus = true
+horizontal_scroll_mode = 0
+
+[node name="List" type="VBoxContainer" parent="Card/Margin/Body/Columns/Items/Scroll" unique_id=95527398]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 0
+
+[node name="Selection" type="HBoxContainer" parent="Card/Margin/Body/Columns/Items" unique_id=1505403178]
+custom_minimum_size = Vector2(0, 52)
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="Name" type="Label" parent="Card/Margin/Body/Columns/Items/Selection" unique_id=159061279]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.8745098, 0.7764706, 0.5411765, 1)
+text = "No item selected"
+text_overrun_behavior = 3
+
+[node name="Action" type="Button" parent="Card/Margin/Body/Columns/Items/Selection" unique_id=96272061]
+custom_minimum_size = Vector2(90, 40)
+layout_mode = 2
+size_flags_vertical = 4
+text = "Equip"
+
+[node name="Footer" type="HBoxContainer" parent="Card/Margin/Body" unique_id=1544216227]
+layout_mode = 2
+
+[node name="Hint" type="Label" parent="Card/Margin/Body/Footer" unique_id=2097392612]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.56078434, 0.6117647, 0.5019608, 1)
+theme_override_font_sizes/font_size = 12
+text = "Hover over an item for details."
+
+[node name="Summary" type="Label" parent="Card/Margin/Body/Footer" unique_id=1444784057]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.56078434, 0.6117647, 0.5019608, 1)
+theme_override_font_sizes/font_size = 12
+text = "Party inventory"

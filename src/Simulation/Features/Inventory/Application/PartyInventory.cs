@@ -6,37 +6,44 @@ namespace Game.Simulation.Features.Inventory.Application;
 
 public sealed class PartyInventory : IPartyInventory
 {
-    private readonly IGoodsCatalog _catalog;
-    private readonly Cargo _cargo = new();
+    private readonly IItemCatalog _catalog;
+    private readonly InventoryContents _contents;
 
-    public PartyInventory(PartyIdentity party, IGoodsCatalog catalog, IEnumerable<InventoryStack>? startingCargo = null)
+    public PartyInventory(PartyIdentity party, IItemCatalog catalog,
+        IEnumerable<InventoryStack>? startingStacks = null, IEnumerable<ItemInstance>? startingItems = null)
     {
         ArgumentNullException.ThrowIfNull(party);
         ArgumentNullException.ThrowIfNull(catalog);
         ArgumentException.ThrowIfNullOrWhiteSpace(party.Id);
+        ArgumentException.ThrowIfNullOrWhiteSpace(party.CommanderId);
         PartyId = party.Id;
+        CharacterId = party.CommanderId;
         _catalog = catalog;
-        foreach (var stack in startingCargo ?? [])
-        {
-            if (!TryAdd(stack.GoodsId, stack.Quantity))
-            {
-                throw new ArgumentException($"Invalid starting cargo '{stack.GoodsId}'.", nameof(startingCargo));
-            }
-        }
+        _contents = new InventoryContents(catalog);
+        foreach (var stack in startingStacks ?? [])
+            if (AddStack(stack.DefinitionId, stack.Quantity) != InventoryResult.Success)
+                throw new ArgumentException($"Invalid starting stack '{stack.DefinitionId}'.", nameof(startingStacks));
+        foreach (var item in startingItems ?? [])
+            if (AddItem(item) != InventoryResult.Success)
+                throw new ArgumentException($"Invalid starting item '{item.InstanceId}'.", nameof(startingItems));
     }
 
     public string PartyId { get; }
-    public IReadOnlyList<InventoryStack> Stacks => _cargo.Stacks;
+    public string CharacterId { get; }
+    public InventoryState State => _contents.State;
 
-    public int GetQuantity(string goodsId)
+    public int GetStackQuantity(string definitionId)
     {
-        _catalog.GetDefinition(goodsId);
-        return _cargo.GetQuantity(goodsId);
+        _catalog.GetDefinition(definitionId);
+        return _contents.GetStackQuantity(definitionId);
     }
 
-    public bool Contains(string goodsId, int quantity) => quantity > 0 && _catalog.Contains(goodsId)
-        && _cargo.GetQuantity(goodsId) >= quantity;
-
-    public bool TryAdd(string goodsId, int quantity) => _catalog.Contains(goodsId) && _cargo.TryAdd(goodsId, quantity);
-    public bool TryRemove(string goodsId, int quantity) => _catalog.Contains(goodsId) && _cargo.TryRemove(goodsId, quantity);
+    public bool ContainsStack(string definitionId, int quantity) => quantity > 0 && _catalog.Contains(definitionId)
+        && _contents.GetStackQuantity(definitionId) >= quantity;
+    public InventoryResult AddStack(string definitionId, int quantity) => _contents.ChangeStack(definitionId, quantity, true);
+    public InventoryResult RemoveStack(string definitionId, int quantity) => _contents.ChangeStack(definitionId, quantity, false);
+    public InventoryResult AddItem(ItemInstance item) => _contents.AddItem(item);
+    public InventoryResult RemoveItem(string instanceId) => _contents.RemoveItem(instanceId);
+    public InventoryResult Equip(string instanceId) => _contents.Equip(instanceId);
+    public InventoryResult Unequip(EquipmentSlot slot) => _contents.Unequip(slot);
 }

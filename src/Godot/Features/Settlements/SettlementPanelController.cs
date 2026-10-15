@@ -1,3 +1,4 @@
+using System;
 using Godot;
 using Game.Simulation.Features.Settlements.Contracts;
 
@@ -14,6 +15,8 @@ public partial class SettlementPanelController : PanelContainer
     [Export] public Label VisitNameLabel { get; set; } = null!;
     [Export] public Label VisitDescriptionLabel { get; set; } = null!;
     [Export] public Button LeaveButton { get; set; } = null!;
+
+    public event Action? TravelStarted;
 
     private ISettlementVisits? _visits;
     private string? _selectedId;
@@ -58,7 +61,7 @@ public partial class SettlementPanelController : PanelContainer
     {
         if (_selectedId is not null)
         {
-            _visits?.TryTravelTo(_selectedId);
+            if (_visits?.TryTravelTo(_selectedId) == true) TravelStarted?.Invoke();
             Refresh();
         }
     }

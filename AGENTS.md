@@ -3,6 +3,7 @@
 ## Working Rules
 
 - Use English for code, documentation and game text.
+- Use full-screen views for major game panels, leaving room for future design. Keep tooltips compact.
 - Use docs/brief.md for implemented systems, docs/gdd.md for game design, and docs/architecture.md for technical rules.
 - Deliver small, complete increments. Preserve existing user changes and keep unrelated work out of scope.
 - Critically assess plans and instructions. Explain concrete flaws, tradeoffs, or unnecessary complexity and recommend better alternatives when warranted; avoid automatic agreement and respect the user's informed decisions.

@@ -1,6 +1,7 @@
 using Godot;
 using Game.Godot.Features.Campaign;
 using Game.Godot.Features.Dynasties;
+using Game.Godot.Features.Inventory;
 using Game.Godot.Features.Parties;
 using Game.Godot.Features.Settlements;
 using Game.Godot.Features.WorldMap;
@@ -26,6 +27,8 @@ public partial class GameBootstrap : Node
     [Export] public DynastyPanelController Dynasty { get; set; } = null!;
     [Export] public CampaignPanelsController Panels { get; set; } = null!;
     [Export] public SettlementPanelController Settlement { get; set; } = null!;
+    [Export] public InventoryPanelController Inventory { get; set; } = null!;
+    [Export] public Button InventoryButton { get; set; } = null!;
 
     private CampaignSession _session = null!;
     private IDynastyQuery _dynasties = null!;
@@ -38,20 +41,29 @@ public partial class GameBootstrap : Node
         _dynasties = StartingDynasty.CreateRoster();
         var party = new PartyTravel(new PartyIdentity("player-company", StartingDynasty.PlayerCharacterId),
             _dynasties, map.Size, ValleyScenario.PlayerStart);
-        var goods = StartingInventory.CreateCatalog();
-        _inventory = StartingInventory.CreateFor(party.Identity, goods);
+        var items = StartingInventory.CreateCatalog();
+        _inventory = StartingInventory.CreateFor(party.Identity, items);
         _session = new CampaignSession(systems: [party]);
         _visits = new SettlementVisits(map.Settlements, map.Size, party, _session);
         Runner.Initialize(_session);
         Campaign.Initialize(_session);
         Map.Initialize(map, party, _session, _visits);
-        Party.Initialize(party, _dynasties, _session, _inventory, goods);
+        Party.Initialize(party, _dynasties, _session);
         Dynasty.Initialize(StartingDynasty.PlayerCharacterId, _dynasties);
         Settlement.Initialize(_visits);
+        var commander = _dynasties.GetCharacter(party.Identity.CommanderId);
+        Inventory.Initialize(_session, _inventory, items, commander.Name, _dynasties.GetDynasty(commander.DynastyId).Name, InventoryButton);
+        Inventory.Opened += Panels.Close;
+        Settlement.TravelStarted += Panels.Close;
         Map.SettlementSelected += ShowSettlement;
     }
 
-    public override void _ExitTree() => Map.SettlementSelected -= ShowSettlement;
+    public override void _ExitTree()
+    {
+        Map.SettlementSelected -= ShowSettlement;
+        Inventory.Opened -= Panels.Close;
+        Settlement.TravelStarted -= Panels.Close;
+    }
 
     private void ShowSettlement(string settlementId)
     {
